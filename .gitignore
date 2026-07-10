@@ -1,0 +1,16 @@
+# Entorno virtual
+backend/venv/
+
+# Base de datos SQLite
+backend/*.db
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Node modules (para React después)
+frontend/node_modules/
+
+# Variables de entorno
+.env
