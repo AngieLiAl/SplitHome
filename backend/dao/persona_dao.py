@@ -38,3 +38,8 @@ def buscar_por_email(self,email):
         if p.email == email:
             return p
     return None 
+
+def obtener_todos(self):
+    """Devuelve la lista de personas ordenada por nombre"""
+    return sorted(self.__bd, key=lambda p: p.nombre)
+
