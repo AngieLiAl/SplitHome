@@ -1,44 +1,20 @@
+# ──────────────────────────────────────────────────────────────
+# MODELO — Categoria
+# Clasificación temática de los gastos del hogar.
+# ──────────────────────────────────────────────────────────────
 class Categoria:
-
-    def __init__(self, id_categoria=0, nombre="", icono="", descripcion=""):
-        self.__id_categoria = id_categoria
-        self.__nombre = nombre
-        self.__icono = icono
-        self.__descripcion = descripcion
+    def __init__(self, nombre, icono="📦"):
+        self.id     = None  # el DAO asigna el ID al insertar
+        self._nombre = nombre
+        self.icono   = icono
 
     @property
-    def id_categoria(self):
-        return self.__id_categoria
-
-    @id_categoria.setter
-    def id_categoria(self, valor):
-        self.__id_categoria = valor
-
-    @property
-    def nombre(self):
-        return self.__nombre
-
+    def nombre(self): return self._nombre
     @nombre.setter
-    def nombre(self, valor):
-        if valor.strip() == "":
-            raise ValueError("El nombre es obligatorio")
-        self.__nombre = valor
-
-    @property
-    def icono(self):
-        return self.__icono
-
-    @icono.setter
-    def icono(self, valor):
-        self.__icono = valor
-
-    @property
-    def descripcion(self):
-        return self.__descripcion
-
-    @descripcion.setter
-    def descripcion(self, valor):
-        self.__descripcion = valor
+    def nombre(self, v):
+        if not v or len(v.strip()) == 0:
+            raise ValueError("El nombre de categoría no puede estar vacío")
+        self._nombre = v.strip()
 
     def __str__(self):
-        return self.__nombre
+        return f"[{self.id}] {self.icono} {self._nombre}"
