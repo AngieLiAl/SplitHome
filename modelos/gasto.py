@@ -1,86 +1,44 @@
+# ──────────────────────────────────────────────────────────────
+# MODELO — Gasto (clase base)
+# Representa un pago realizado por un miembro del hogar.
+# Aplica encapsulamiento en monto y descripcion.
+# ──────────────────────────────────────────────────────────────
+from datetime import date
+
 class Gasto:
+    def __init__(self, descripcion, monto, id_persona, id_categoria, fecha=None, compartido=False):
+        self.id           = None  # el DAO asigna el ID al insertar
+        self._descripcion = descripcion
+        self._monto       = monto
+        self.id_persona   = id_persona
+        self.id_categoria = id_categoria
+        self.fecha        = fecha or str(date.today())
+        self.compartido   = compartido
 
-    def __init__(self,
-                id_gasto=0,
-                descripcion="",
-                monto=0.0,
-                fecha="",
-                es_compartido=False,
-                id_persona=0,
-                id_categoria=0):
-
-        self.__id_gasto = id_gasto
-        self.__descripcion = descripcion
-        self.__monto = monto
-        self.__fecha = fecha
-        self.__es_compartido = es_compartido
-        self.__id_persona = id_persona
-        self.__id_categoria = id_categoria
-
+    # ── Encapsulamiento: monto ─────────────────────────────────
     @property
-    def id_gasto(self):
-        return self.__id_gasto
-
-    @id_gasto.setter
-    def id_gasto(self, valor):
-        self.__id_gasto = valor
-
-    @property
-    def descripcion(self):
-        return self.__descripcion
-
-    @descripcion.setter
-    def descripcion(self, valor):
-        if valor.strip() == "":
-            raise ValueError("La descripción es obligatoria")
-        self.__descripcion = valor
-
-    @property
-    def monto(self):
-        return self.__monto
-
+    def monto(self): return self._monto
     @monto.setter
-    def monto(self, valor):
-        if valor < 0:
+    def monto(self, v):
+        if v < 0:
             raise ValueError("El monto no puede ser negativo")
-        self.__monto = valor
+        self._monto = round(v, 2)
 
+    # ── Encapsulamiento: descripcion ───────────────────────────
     @property
-    def fecha(self):
-        return self.__fecha
-
-    @fecha.setter
-    def fecha(self, valor):
-        self.__fecha = valor
-
-    @property
-    def es_compartido(self):
-        return self.__es_compartido
-
-    @es_compartido.setter
-    def es_compartido(self, valor):
-        self.__es_compartido = valor
-
-    @property
-    def id_persona(self):
-        return self.__id_persona
-
-    @id_persona.setter
-    def id_persona(self, valor):
-        self.__id_persona = valor
-
-    @property
-    def id_categoria(self):
-        return self.__id_categoria
-
-    @id_categoria.setter
-    def id_categoria(self, valor):
-        self.__id_categoria = valor
+    def descripcion(self): return self._descripcion
+    @descripcion.setter
+    def descripcion(self, v):
+        if not v or len(v.strip()) == 0:
+            raise ValueError("La descripción no puede estar vacía")
+        self._descripcion = v.strip()
 
     def calcular_deuda(self):
-        if self.__es_compartido:
-            return self.__monto / 2
-        return self.__monto
+        """División igualitaria entre dos miembros por defecto."""
+        return round(self._monto / 2, 2)
 
     def __str__(self):
-        return f"{self.__descripcion} - S/. {self.__monto}"
+        return (f"[{self.id}] {self._descripcion} | "
+                f"S/.{self._monto:.2f} | {self.fecha} | "
+                f"Persona:{self.id_persona} | Cat:{self.id_categoria} | "
+                f"Compartido:{'Sí' if self.compartido else 'No'}")
