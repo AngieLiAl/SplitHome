@@ -8,3 +8,10 @@ class PersonaNoEncontradaError(Exception):
 class EmailDuplicadoError(Exception):
     def __init__(self, email):
         super().__init__(f"Email '{email}' ya registrado")
+
+class PersonaDAO:
+    def __init__(self):
+        self.__bd = []
+        self.__cid = 1
+        self.__log = Logger()
+        
