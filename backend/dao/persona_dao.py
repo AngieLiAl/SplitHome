@@ -31,3 +31,10 @@ def insertar(self, persona):
         f"Persona agregada: {persona.nombre} (ID={persona.id})"
     )
     return persona
+
+def buscar_por_email(self,email):
+    """devuelve la persona con ese emaill o none si esta no existe"""
+    for p in self.__bd:
+        if p.email == email:
+            return p
+    return None 
