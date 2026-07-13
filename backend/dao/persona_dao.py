@@ -15,3 +15,19 @@ class PersonaDAO:
         self.__cid = 1
         self.__log = Logger()
         
+def insertar(self, persona):
+    """Agrega una nueva persona verificando que el email no esté duplicado."""
+
+    if self.buscar_por_email(persona.email):
+        self.__log.warning(f"Email duplicado: {persona.email}")
+        raise EmailDuplicadoError(persona.email)
+
+    persona.id = self.__cid
+    self.__cid += 1
+
+    self.__bd.append(persona)
+
+    self.__log.info(
+        f"Persona agregada: {persona.nombre} (ID={persona.id})"
+    )
+    return persona
