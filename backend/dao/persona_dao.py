@@ -66,3 +66,21 @@ def actualizar(self, persona_id, nombre=None, email=None):
 
     return p
 
+def eliminar(self, persona_id):
+    """Elimina la persona con ese ID."""
+
+    p = self.buscar_por_id(persona_id)
+
+    if not p:
+        self.__log.error(
+            f"Eliminar fallido: Persona ID={persona_id} no existe"
+        )
+        raise PersonaNoEncontradaError(persona_id)
+
+    self.__bd.remove(p)
+
+    self.__log.info(
+        f"Persona eliminada: {p.nombre} (ID={persona_id})"
+    )
+
+    return True
