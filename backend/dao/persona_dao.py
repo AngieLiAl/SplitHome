@@ -43,3 +43,26 @@ def obtener_todos(self):
     """Devuelve la lista de personas ordenada por nombre"""
     return sorted(self.__bd, key=lambda p: p.nombre)
 
+def actualizar(self, persona_id, nombre=None, email=None):
+    """Actualiza solo los campos que se envíen."""
+
+    p = self.buscar_por_id(persona_id)
+
+    if not p:
+        self.__log.error(
+            f"Actualizar fallido: Persona ID={persona_id} no existe"
+        )
+        raise PersonaNoEncontradaError(persona_id)
+
+    if nombre:
+        p.nombre = nombre
+
+    if email:
+        p.email = email
+
+    self.__log.info(
+        f"Persona actualizada: ID={persona_id}"
+    )
+
+    return p
+
