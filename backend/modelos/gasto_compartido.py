@@ -4,7 +4,7 @@
 #   - Hereda todos los atributos y métodos de Gasto
 #   - Sobreescribe calcular_deuda() para distribuir por proporción
 # ──────────────────────────────────────────────────────────────
-from modelos.gasto import Gasto
+from backend.modelos.gasto import Gasto
 
 class GastoCompartido(Gasto):
     def __init__(self, descripcion, monto, id_persona, id_categoria,
