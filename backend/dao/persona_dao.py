@@ -84,3 +84,7 @@ def eliminar(self, persona_id):
     )
 
     return True
+
+def total(self):
+    return len(self.__bd)
+
