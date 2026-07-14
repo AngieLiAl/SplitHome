@@ -40,6 +40,13 @@ class CategoriaDAO:
         self.__bd.append(categoria)
         self.__log.info(f"Categoría agregada: {categoria.nombre} (ID={categoria.id})")
         return categoria
+    
+    def buscar_por_nombre(self, nombre):
+        """Devuelve la categoría con ese nombre o None si no existe."""
+        for c in self.__bd:
+            if c.nombre.lower() == nombre.lower():
+                return c
+        return None
 
     def buscar_por_id(self, categoria_id):
         """Devuelve la categoría con ese ID o None si no existe."""
@@ -52,4 +59,13 @@ class CategoriaDAO:
         """Devuelve la lista de categorías ordenada por nombre."""
         return sorted(self.__bd, key=lambda c: c.nombre)
 
-    
+    def actualizar(self, categoria_id, nombre=None, icono=None):
+        """Actualiza solo los campos que se envíen."""
+        c = self.buscar_por_id(categoria_id)
+        if not c:
+            self.__log.error(f"Actualizar fallido: Categoría ID={categoria_id} no existe")
+            raise CategoriaNoEncontradaError(categoria_id)
+        if nombre: c.nombre = nombre
+        if icono:  c.icono  = icono
+        self.__log.info(f"Categoría actualizada: ID={categoria_id}")
+        return c
