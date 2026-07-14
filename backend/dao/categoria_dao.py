@@ -79,3 +79,6 @@ class CategoriaDAO:
         self.__bd.remove(c)
         self.__log.info(f"Categoría eliminada: {c.nombre} (ID={categoria_id})")
         return True
+
+    def total(self):
+        return len(self.__bd)
