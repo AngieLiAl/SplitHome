@@ -16,3 +16,17 @@ class CategoriaDAO:
         self.__log = Logger()
         self._cargar_categorias_base()
         
+        def _cargar_categorias_base(self):
+            """Carga las categorías predeterminadas del hogar al iniciar."""
+        bases = [
+            ("Alquiler", "🏠"), ("Luz",      "💡"),
+            ("Agua",     "💧"), ("Internet", "📶"),
+            ("Comida",   "🍛"), ("Limpieza", "🧹"),
+            ("Otros",    "📦"),
+        ]
+        for nombre, icono in bases:
+            c = Categoria(nombre, icono)
+            c.id = self.__cid
+            self.__cid += 1
+            self.__bd.append(c)
+
