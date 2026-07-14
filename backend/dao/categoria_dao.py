@@ -41,4 +41,9 @@ class CategoriaDAO:
         self.__log.info(f"Categoría agregada: {categoria.nombre} (ID={categoria.id})")
         return categoria
 
-    
+    def buscar_por_id(self, categoria_id):
+        """devuelvela categoria con ese ID o None si no existe"""
+        for c in self.__bd:
+            if c.id == categoria_id:
+                return c
+        return None
