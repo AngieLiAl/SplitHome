@@ -69,3 +69,13 @@ class CategoriaDAO:
         if icono:  c.icono  = icono
         self.__log.info(f"Categoría actualizada: ID={categoria_id}")
         return c
+
+    def eliminar(self, categoria_id):
+        """Elimina la categoría con ese ID."""
+        c = self.buscar_por_id(categoria_id)
+        if not c:
+            self.__log.error(f"Eliminar fallido: Categoría ID={categoria_id} no existe")
+            raise CategoriaNoEncontradaError(categoria_id)
+        self.__bd.remove(c)
+        self.__log.info(f"Categoría eliminada: {c.nombre} (ID={categoria_id})")
+        return True
