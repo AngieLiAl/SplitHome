@@ -41,3 +41,4 @@ class CategoriaDAO:
         self.__log.info(f"Categoría agregada: {categoria.nombre} (ID={categoria.id})")
         return categoria
 
+    
