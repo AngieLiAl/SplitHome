@@ -16,8 +16,8 @@ class CategoriaDAO:
         self.__log = Logger()
         self._cargar_categorias_base()
         
-        def _cargar_categorias_base(self):
-            """Carga las categorías predeterminadas del hogar al iniciar."""
+    def _cargar_categorias_base(self):
+        """Carga las categorías predeterminadas del hogar al iniciar."""
         bases = [
             ("Alquiler", "🏠"), ("Luz",      "💡"),
             ("Agua",     "💧"), ("Internet", "📶"),
@@ -29,4 +29,15 @@ class CategoriaDAO:
             c.id = self.__cid
             self.__cid += 1
             self.__bd.append(c)
+            
+    def insertar(self, categoria):
+        """Agrega una nueva categoría verificando que no esté duplicada."""
+        if self.buscar_por_nombre(categoria.nombre):
+            self.__log.warning(f"Categoría duplicada: {categoria.nombre}")
+            raise CategoriaDuplicadaError(categoria.nombre)
+        categoria.id = self.__cid
+        self.__cid += 1
+        self.__bd.append(categoria)
+        self.__log.info(f"Categoría agregada: {categoria.nombre} (ID={categoria.id})")
+        return categoria
 
