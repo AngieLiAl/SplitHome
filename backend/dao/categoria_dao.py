@@ -42,8 +42,14 @@ class CategoriaDAO:
         return categoria
 
     def buscar_por_id(self, categoria_id):
-        """devuelvela categoria con ese ID o None si no existe"""
+        """Devuelve la categoría con ese ID o None si no existe."""
         for c in self.__bd:
             if c.id == categoria_id:
                 return c
         return None
+    
+    def obtener_todos(self):
+        """Devuelve la lista de categorías ordenada por nombre."""
+        return sorted(self.__bd, key=lambda c: c.nombre)
+
+    
