@@ -27,3 +27,11 @@ def insertar(self, gasto):
         conn.close()
         self.__log.info(f"Gasto agregado: {gasto.descripcion} S/.{gasto.monto:.2f} (ID={gasto.id})")
         return gasto
+
+def buscar_por_id(self, gasto_id):
+        conn = obtener_conexion()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM gastos WHERE id = ?", (gasto_id,))
+        fila = cursor.fetchone()
+        conn.close()
+        return self.__fila_a_gasto(fila) if fila else None
