@@ -77,3 +77,18 @@ class GastoDAO:
         conn.close()
         self.__log.info(f"Gasto actualizado: ID={gasto_id}")
         return g
+    
+    def eliminar(self, gasto_id):
+        g = self.buscar_por_id(gasto_id)
+        if not g:
+            self.__log.error(f"Eliminar fallido: Gasto ID={gasto_id} no existe")
+            raise GastoNoEncontradoError(gasto_id)
+        conn = obtener_conexion()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM gastos WHERE id = ?", (gasto_id,))
+        conn.commit()
+        conn.close()
+        self.__log.info(f"Gasto eliminado: {g.descripcion} (ID={gasto_id})")
+        return True
+    
+    
