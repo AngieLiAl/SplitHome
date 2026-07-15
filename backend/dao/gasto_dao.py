@@ -107,3 +107,14 @@ class GastoDAO:
         conn.close()
         return total
     
+    def __fila_a_gasto(self, fila):
+        g = Gasto(
+            fila["descripcion"],
+            fila["monto"],
+            fila["id_persona"],
+            fila["id_categoria"],
+            fila["fecha"],
+            bool(fila["es_compartido"])
+        )
+        g.id = fila["id"]
+        return g
