@@ -54,3 +54,26 @@ class GastoDAO:
         filas = cursor.fetchall()
         conn.close()
         return [self.__fila_a_gasto(f) for f in filas]
+    
+    def actualizar(self, gasto_id, descripcion=None, monto=None,
+                fecha=None, id_categoria=None):
+        g = self.buscar_por_id(gasto_id)
+        if not g:
+            self.__log.error(f"Actualizar fallido: Gasto ID={gasto_id} no existe")
+            raise GastoNoEncontradoError(gasto_id)
+        nueva_desc  = descripcion   if descripcion   is not None else g.descripcion
+        nuevo_monto = monto         if monto         is not None else g.monto
+        nueva_fecha = fecha         if fecha         is not None else g.fecha
+        nueva_cat   = id_categoria  if id_categoria  is not None else g.id_categoria
+        conn = obtener_conexion()
+        cursor = conn.cursor()
+        cursor.execute(
+            """UPDATE gastos
+            SET descripcion = ?, monto = ?, fecha = ?, id_categoria = ?
+            WHERE id = ?""",
+            (nueva_desc, nuevo_monto, nueva_fecha, nueva_cat, gasto_id)
+        )
+        conn.commit()
+        conn.close()
+        self.__log.info(f"Gasto actualizado: ID={gasto_id}")
+        return g
