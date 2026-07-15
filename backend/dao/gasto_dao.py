@@ -91,4 +91,11 @@ class GastoDAO:
         self.__log.info(f"Gasto eliminado: {g.descripcion} (ID={gasto_id})")
         return True
     
+    def calcular_total(self):
+        conn = obtener_conexion()
+        cursor = conn.cursor()
+        cursor.execute("SELECT SUM(monto) FROM gastos")
+        resultado = cursor.fetchone()[0]
+        conn.close()
+        return resultado or 0.0
     
