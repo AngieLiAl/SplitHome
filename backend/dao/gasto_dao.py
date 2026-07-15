@@ -99,3 +99,11 @@ class GastoDAO:
         conn.close()
         return resultado or 0.0
     
+    def total(self):
+        conn = obtener_conexion()
+        cursor = conn.cursor()
+        cursor.execute("SELECT COUNT(*) FROM gastos")
+        total = cursor.fetchone()[0]
+        conn.close()
+        return total
+    
