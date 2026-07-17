@@ -94,3 +94,12 @@ class ParticipacionDAO:
             balance[pid] = round(resultado or 0.0, 2)
         conn.close()
         return balance
+    
+    def total(self):
+        """Devuelve el total de participaciones registradas."""
+        conn = obtener_conexion()
+        cursor = conn.cursor()
+        cursor.execute("SELECT COUNT(*) FROM participacion")
+        total = cursor.fetchone()[0]
+        conn.close()
+        return total
