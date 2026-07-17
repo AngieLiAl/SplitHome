@@ -64,3 +64,15 @@ class ParticipacionDAO:
         filas = cursor.fetchall()
         conn.close()
         return filas
+    
+    def eliminar_por_gasto(self, id_gasto):
+        """Elimina todas las participaciones de un gasto."""
+        conn = obtener_conexion()
+        cursor = conn.cursor()
+        cursor.execute(
+            "DELETE FROM participacion WHERE id_gasto = ?",
+            (id_gasto,)
+        )
+        conn.commit()
+        conn.close()
+        self.__log.info(f"Participaciones eliminadas del Gasto ID={id_gasto}")
