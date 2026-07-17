@@ -47,3 +47,20 @@ class ParticipacionDAO:
         filas = cursor.fetchall()
         conn.close()
         return filas
+    
+    def buscar_por_persona(self, id_persona):
+        """Devuelve todos los gastos en los que participa una persona."""
+        conn = obtener_conexion()
+        cursor = conn.cursor()
+        cursor.execute(
+            """SELECT p.id_gasto, g.descripcion, g.monto,
+                    p.proporcion, p.monto_asignado
+            FROM participacion p
+            JOIN gastos g ON p.id_gasto = g.id
+            WHERE p.id_persona = ?
+            ORDER BY g.fecha DESC""",
+            (id_persona,)
+        )
+        filas = cursor.fetchall()
+        conn.close()
+        return filas
