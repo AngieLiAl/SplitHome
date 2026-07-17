@@ -76,3 +76,21 @@ class ParticipacionDAO:
         conn.commit()
         conn.close()
         self.__log.info(f"Participaciones eliminadas del Gasto ID={id_gasto}")
+        
+    def calcular_balance(self, persona_ids):
+        """
+        Calcula cuanto debe cada persona basandose en sus participaciones.
+        Devuelve un diccionario con el balance de cada persona.
+        """
+        conn = obtener_conexion()
+        cursor = conn.cursor()
+        balance = {}
+        for pid in persona_ids:
+            cursor.execute(
+                "SELECT SUM(monto_asignado) FROM participacion WHERE id_persona = ?",
+                (pid,)
+            )
+            resultado = cursor.fetchone()[0]
+            balance[pid] = round(resultado or 0.0, 2)
+        conn.close()
+        return balance
