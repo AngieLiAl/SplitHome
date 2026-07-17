@@ -31,3 +31,19 @@ class ParticipacionDAO:
             f"Participacion registrada: Gasto ID={id_gasto} "
             f"Persona ID={id_persona} S/. {monto_asignado:.2f}"
         )
+        
+    def buscar_por_gasto(self, id_gasto):
+        """Devuelve todas las participaciones de un gasto compartido."""
+        conn = obtener_conexion()
+        cursor = conn.cursor()
+        cursor.execute(
+            """SELECT p.id_gasto, p.id_persona, pe.nombre, 
+                    p.proporcion, p.monto_asignado
+            FROM participacion p
+            JOIN personas pe ON p.id_persona = pe.id
+            WHERE p.id_gasto = ?""",
+            (id_gasto,)
+        )
+        filas = cursor.fetchall()
+        conn.close()
+        return filas
