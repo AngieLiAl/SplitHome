@@ -47,3 +47,7 @@ def main():
             case "12": eliminar_gasto(gdao, pardao)
             case "13": gastos_por_persona(gdao, pdao)
             case "14": ver_total_gastado(gdao)
+            case "15": ver_participaciones_gasto(pardao)
+            case "16": ver_gastos_persona(pardao, pdao)
+            case "17": ver_balance(pardao, pdao)
+            
