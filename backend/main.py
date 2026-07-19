@@ -19,3 +19,11 @@ from vistas.menu import (
     ver_balance
 )
 
+def main():
+    inicializar()
+
+    cfg    = SistemaConfig()
+    pdao   = PersonaDAO()
+    cdao   = CategoriaDAO()
+    gdao   = GastoDAO()
+    pardao = ParticipacionDAO()
