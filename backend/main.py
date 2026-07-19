@@ -50,4 +50,12 @@ def main():
             case "15": ver_participaciones_gasto(pardao)
             case "16": ver_gastos_persona(pardao, pdao)
             case "17": ver_balance(pardao, pdao)
+            case "18": Logger().mostrar_logs()
+            case "19": Logger().limpiar()
+            case "0":
+                Logger().info("Sistema cerrado por el usuario")
+                print("\n  Hasta luego.")
+                break
+            case _:
+                print("  Opción no válida, elige entre 0 y 19")
             
