@@ -37,3 +37,7 @@ def main():
             case "2":  listar_personas(pdao)
             case "3":  actualizar_persona(pdao)
             case "4":  eliminar_persona(pdao)
+            case "5":  agregar_categoria(cdao)
+            case "6":  listar_categorias(cdao)
+            case "7":  actualizar_categoria(cdao)
+            case "8":  eliminar_categoria(cdao)
