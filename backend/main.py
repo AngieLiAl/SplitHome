@@ -32,3 +32,8 @@ def main():
         mostrar_menu(cfg)
         opcion = input("  Elige una opción: ").strip()
         
+        match opcion:
+            case "1":  agregar_persona(pdao)
+            case "2":  listar_personas(pdao)
+            case "3":  actualizar_persona(pdao)
+            case "4":  eliminar_persona(pdao)
