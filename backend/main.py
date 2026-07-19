@@ -27,3 +27,8 @@ def main():
     cdao   = CategoriaDAO()
     gdao   = GastoDAO()
     pardao = ParticipacionDAO()
+    
+    while True:
+        mostrar_menu(cfg)
+        opcion = input("  Elige una opción: ").strip()
+        
