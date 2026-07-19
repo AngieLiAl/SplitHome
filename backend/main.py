@@ -58,4 +58,6 @@ def main():
                 break
             case _:
                 print("  Opción no válida, elige entre 0 y 19")
-            
+                
+if __name__ == "__main__":
+    main()
