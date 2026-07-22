@@ -245,3 +245,43 @@ def ver_total_gastado(gdao):
     print("\n--- TOTAL GASTADO ---")
     total = gdao.calcular_total()
     print(f"  Total registrado: S/. {total:.2f}")
+    
+# ── PARTICIPACIONES ────────────────────────────────────────────
+def ver_participaciones_gasto(pardao):
+    print("\n--- PARTICIPACIONES DE UN GASTO ---")
+    try:
+        id_gasto = int(input("  ID del gasto: "))
+        filas = pardao.buscar_por_gasto(id_gasto)
+        if filas:
+            for f in filas:
+                print(f"  {f['nombre']} | {f['proporcion']}% | S/. {f['monto_asignado']:.2f}")
+        else:
+            print("  (Este gasto no tiene participaciones registradas)")
+    except ValueError:
+        print("  ERROR: El ID debe ser un número entero")
+
+def ver_gastos_persona(pardao, pdao):
+    print("\n--- GASTOS EN LOS QUE PARTICIPA UNA PERSONA ---")
+    listar_personas(pdao)
+    try:
+        id_persona = int(input("  ID de la persona: "))
+        filas = pardao.buscar_por_persona(id_persona)
+        if filas:
+            for f in filas:
+                print(f"  {f['descripcion']} | Monto total S/. {f['monto']:.2f} | "
+                    f"Le toca S/. {f['monto_asignado']:.2f} ({f['proporcion']}%)")
+        else:
+            print("  (Esta persona no tiene participaciones registradas)")
+    except ValueError:
+        print("  ERROR: El ID debe ser un número entero")
+
+def ver_balance(pardao, pdao):
+    print("\n--- BALANCE ENTRE MIEMBROS ---")
+    personas = pdao.obtener_todos()
+    if not personas:
+        print("  (No hay personas registradas)")
+        return
+    persona_ids = [p.id for p in personas]
+    balance = pardao.calcular_balance(persona_ids)
+    for p in personas:
+        print(f"  {p.nombre} debe pagar en total: S/. {balance[p.id]:.2f}")
