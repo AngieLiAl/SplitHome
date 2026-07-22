@@ -87,3 +87,47 @@ def eliminar_persona(pdao):
         print(f"  ERROR: {ex}")
     except ValueError:
         print("  ERROR: El ID debe ser un número entero")
+        
+# ── CATEGORIAS ─────────────────────────────────────────────────
+def agregar_categoria(cdao):
+    print("\n--- AGREGAR CATEGORIA ---")
+    nombre      = input("  Nombre      : ")
+    icono       = input("  Icono (emoji, Enter para 📦): ").strip()
+    descripcion = input("  Descripcion : ")
+    try:
+        c = cdao.insertar(Categoria(nombre, icono or "📦", descripcion))
+        print(f"  OK Categoria agregada con ID={c.id}")
+    except CategoriaDuplicadaError as ex:
+        print(f"  ERROR: {ex}")
+
+def listar_categorias(cdao):
+    print("\n--- CATEGORIAS ---")
+    categorias = cdao.obtener_todos()
+    if categorias:
+        for c in categorias: print(f"  {c}")
+    else:
+        print("  (No hay categorias registradas)")
+
+def actualizar_categoria(cdao):
+    print("\n--- ACTUALIZAR CATEGORIA ---")
+    try:
+        categoria_id = int(input("  ID de la categoria a actualizar: "))
+        nombre       = input("  Nuevo nombre (Enter para no cambiar): ").strip()
+        icono        = input("  Nuevo icono  (Enter para no cambiar): ").strip()
+        c = cdao.actualizar(categoria_id, nombre or None, icono or None)
+        print(f"  OK Categoria actualizada: {c}")
+    except CategoriaNoEncontradaError as ex:
+        print(f"  ERROR: {ex}")
+    except ValueError:
+        print("  ERROR: El ID debe ser un número entero")
+
+def eliminar_categoria(cdao):
+    print("\n--- ELIMINAR CATEGORIA ---")
+    try:
+        categoria_id = int(input("  ID de la categoria a eliminar: "))
+        cdao.eliminar(categoria_id)
+        print(f"  OK Categoria ID={categoria_id} eliminada")
+    except CategoriaNoEncontradaError as ex:
+        print(f"  ERROR: {ex}")
+    except ValueError:
+        print("  ERROR: El ID debe ser un número entero")
