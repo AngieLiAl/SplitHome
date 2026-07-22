@@ -44,3 +44,46 @@ def mostrar_menu(cfg):
     print("  19. Limpiar historial de logs")
     print("  0. Salir")
     print(f"{'=' * 45}")
+    
+    # ── PERSONAS ───────────────────────────────────────────────────
+def agregar_persona(pdao):
+    print("\n--- AGREGAR PERSONA ---")
+    nombre = input("  Nombre : ")
+    email  = input("  Email  : ")
+    try:
+        p = pdao.insertar(Persona(nombre, email))
+        print(f"  OK Persona agregada con ID={p.id}")
+    except EmailDuplicadoError as ex:
+        print(f"  ERROR: {ex}")
+
+def listar_personas(pdao):
+    print("\n--- PERSONAS ---")
+    personas = pdao.obtener_todos()
+    if personas:
+        for p in personas: print(f"  {p}")
+    else:
+        print("  (No hay personas registradas)")
+
+def actualizar_persona(pdao):
+    print("\n--- ACTUALIZAR PERSONA ---")
+    try:
+        persona_id = int(input("  ID de la persona a actualizar: "))
+        nombre     = input("  Nuevo nombre (Enter para no cambiar): ").strip()
+        email      = input("  Nuevo email  (Enter para no cambiar): ").strip()
+        p = pdao.actualizar(persona_id, nombre or None, email or None)
+        print(f"  OK Persona actualizada: {p}")
+    except PersonaNoEncontradaError as ex:
+        print(f"  ERROR: {ex}")
+    except ValueError:
+        print("  ERROR: El ID debe ser un número entero")
+
+def eliminar_persona(pdao):
+    print("\n--- ELIMINAR PERSONA ---")
+    try:
+        persona_id = int(input("  ID de la persona a eliminar: "))
+        pdao.eliminar(persona_id)
+        print(f"  OK Persona ID={persona_id} eliminada")
+    except PersonaNoEncontradaError as ex:
+        print(f"  ERROR: {ex}")
+    except ValueError:
+        print("  ERROR: El ID debe ser un número entero")
