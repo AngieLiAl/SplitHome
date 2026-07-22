@@ -131,3 +131,117 @@ def eliminar_categoria(cdao):
         print(f"  ERROR: {ex}")
     except ValueError:
         print("  ERROR: El ID debe ser un número entero")
+        
+# ── GASTOS ─────────────────────────────────────────────────────
+def agregar_gasto(gdao, pdao, cdao, pardao):
+    print("\n--- AGREGAR GASTO ---")
+    listar_personas(pdao)
+    listar_categorias(cdao)
+    try:
+        descripcion  = input("  Descripcion  : ")
+        monto        = float(input("  Monto        : "))
+        id_persona   = int(input("  ID persona que pago: "))
+        id_categoria = int(input("  ID categoria : "))
+        compartido   = input("  Es compartido? (s/n): ").strip().lower()
+
+        if not pdao.buscar_por_id(id_persona):
+            print(f"  ERROR: Persona ID={id_persona} no existe")
+            return
+        if not cdao.buscar_por_id(id_categoria):
+            print(f"  ERROR: Categoria ID={id_categoria} no existe")
+            return
+
+        if compartido == "s":
+            # Listar personas para elegir quienes participan
+            print("\n  Personas disponibles para participar:")
+            listar_personas(pdao)
+            id_persona2 = int(input("  ID de la otra persona que participa: "))
+
+            if not pdao.buscar_por_id(id_persona2):
+                print(f"  ERROR: Persona ID={id_persona2} no existe")
+                return
+            if id_persona2 == id_persona:
+                print("  ERROR: La otra persona debe ser diferente al pagador")
+                return
+
+            proporcion = float(
+                input("  Proporcion del pagador % (Enter para 50): ").strip() or "50"
+            )
+            proporcion2 = round(100 - proporcion, 2)
+
+            # Insertar el gasto compartido
+            g = gdao.insertar(GastoCompartido(descripcion, monto,
+                                            id_persona, id_categoria,
+                                            proporcion=proporcion))
+
+            # Calcular montos de cada uno
+            monto1 = round(monto * proporcion  / 100, 2)
+            monto2 = round(monto * proporcion2 / 100, 2)
+
+            # Registrar participaciones
+            pardao.insertar(g.id, id_persona,  proporcion,  monto1)
+            pardao.insertar(g.id, id_persona2, proporcion2, monto2)
+
+            print(f"  OK Gasto compartido agregado ID={g.id}")
+            print(f"  Persona ID={id_persona}  debe S/. {monto1:.2f} ({proporcion}%)")
+            print(f"  Persona ID={id_persona2} debe S/. {monto2:.2f} ({proporcion2}%)")
+        else:
+            g = gdao.insertar(Gasto(descripcion, monto, id_persona, id_categoria))
+            print(f"  OK Gasto agregado con ID={g.id}")
+
+    except ValueError:
+        print("  ERROR: Monto e IDs deben ser numeros")
+
+def listar_gastos(gdao):
+    print("\n--- GASTOS ---")
+    gastos = gdao.obtener_todos()
+    if gastos:
+        for g in gastos: print(f"  {g}")
+    else:
+        print("  (No hay gastos registrados)")
+
+def actualizar_gasto(gdao):
+    print("\n--- ACTUALIZAR GASTO ---")
+    try:
+        gasto_id    = int(input("  ID del gasto a actualizar: "))
+        descripcion = input("  Nueva descripcion (Enter para no cambiar): ").strip()
+        monto_str   = input("  Nuevo monto       (Enter para no cambiar): ").strip()
+        fecha       = input("  Nueva fecha       (Enter para no cambiar): ").strip()
+        monto       = float(monto_str) if monto_str else None
+        g = gdao.actualizar(gasto_id, descripcion or None, monto, fecha or None)
+        print(f"  OK Gasto actualizado: {g}")
+    except GastoNoEncontradoError as ex:
+        print(f"  ERROR: {ex}")
+    except ValueError:
+        print("  ERROR: ID debe ser entero y monto debe ser numero")
+
+def eliminar_gasto(gdao, pardao):
+    print("\n--- ELIMINAR GASTO ---")
+    try:
+        gasto_id = int(input("  ID del gasto a eliminar: "))
+        # Primero eliminar participaciones asociadas
+        pardao.eliminar_por_gasto(gasto_id)
+        gdao.eliminar(gasto_id)
+        print(f"  OK Gasto ID={gasto_id} eliminado")
+    except GastoNoEncontradoError as ex:
+        print(f"  ERROR: {ex}")
+    except ValueError:
+        print("  ERROR: El ID debe ser un número entero")
+
+def gastos_por_persona(gdao, pdao):
+    print("\n--- GASTOS POR PERSONA ---")
+    listar_personas(pdao)
+    try:
+        persona_id = int(input("  ID de la persona: "))
+        gastos = gdao.obtener_por_persona(persona_id)
+        if gastos:
+            for g in gastos: print(f"  {g}")
+        else:
+            print("  (Esta persona no tiene gastos registrados)")
+    except ValueError:
+        print("  ERROR: El ID debe ser un número entero")
+
+def ver_total_gastado(gdao):
+    print("\n--- TOTAL GASTADO ---")
+    total = gdao.calcular_total()
+    print(f"  Total registrado: S/. {total:.2f}")
