@@ -17,4 +17,12 @@ function Panel() {
     { descripcion: "Mercado semanal", monto: 180.00, persona: "Angela", categoria: "🍛 Comida" },
     ]
     
+    const porCategoria = [
+    { nombre: "🏠 Alquiler", monto: 1200, porcentaje: 100 },
+    { nombre: "🍛 Comida", monto: 180, porcentaje: 15 },
+    { nombre: "📶 Internet", monto: 99, porcentaje: 8 },
+    { nombre: "💡 Luz", monto: 85, porcentaje: 7 },
+    { nombre: "💧 Agua", monto: 60, porcentaje: 5 },
+]
+
     
