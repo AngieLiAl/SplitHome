@@ -42,6 +42,44 @@ function Panel() {
                     + Nuevo gasto
                 </Link>
             </div>
+
+            {/* KPIs */}
+            <div className="row mb-4">
+
+                <div className="col-md-4 mb-3">
+                    <div className="kpi-card card p-3">
+                        <span className="kpi-label">Gastado este mes</span>
+                        <span className="kpi-value">S/. {totalMonto.toFixed(2)}</span>
+                        <span style={{ fontSize: "0.78rem", color: "var(--accent2)" }}>
+                            ↑ este mes
+                        </span>
+                    </div>
+                </div>
+
+                <div className="col-md-4 mb-3">
+                    <div className="kpi-card card p-3">
+                        <span className="kpi-label">Gastos registrados</span>
+                        <span className="kpi-value">{totalGastos}</span>
+                        <span style={{ fontSize: "0.78rem", color: "var(--muted)" }}>
+                            este mes
+                        </span>
+                    </div>
+                </div>
+
+                <div className="col-md-4 mb-3">
+                    <div className="kpi-card oscuro card p-3">
+                        <span className="kpi-label">Tu balance</span>
+                        <span className="kpi-value text-white">S/. 0.00</span>
+                        <span style={{ fontSize: "0.78rem", color: "var(--accent)" }}>
+                            al día
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+
+            
+
         </div>
     )
 }
