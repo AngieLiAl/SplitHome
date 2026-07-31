@@ -118,6 +118,43 @@ function Panel() {
                         </table>
                     </div>
                 </div>
+                
+                {/* Barras por categoría */}
+                <div className="col-md-4 mb-4">
+                    <div className="panel-card h-100">
+                        <h6 className="panel-titulo">Por categoría</h6>
+
+                        <div className="d-flex flex-column gap-3">
+                            {porCategoria.map((c, i) => (
+                                <div key={i}>
+                                    <div className="d-flex justify-content-between mb-1"
+                                        style={{ fontSize: "0.84rem" }}>
+                                        <span>{c.nombre}</span>
+                                        <strong>S/. {c.monto.toFixed(2)}</strong>
+                                    </div>
+                                    <div style={{
+                                        height: "8px",
+                                        background: "var(--mid)",
+                                        borderRadius: "99px",
+                                        overflow: "hidden"
+                                    }}>
+                                        <div style={{
+                                            width: `${c.porcentaje}%`,
+                                            height: "100%",
+                                            background: "var(--accent)",
+                                            borderRadius: "99px",
+                                            transition: "width 0.6s ease"
+                                        }}></div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            
+            
 
         </div>
     )
