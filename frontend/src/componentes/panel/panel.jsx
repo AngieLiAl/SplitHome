@@ -153,8 +153,25 @@ function Panel() {
                 </div>
 
             </div>
-            
-            
+
+            {/* Acceso rápido */}
+            <div className="panel-card mb-4">
+                <h6 className="panel-titulo">⚡ Acceso Rápido</h6>
+                <div className="d-flex flex-wrap gap-2">
+                    <Link to="/persona" className="btn btn-outline-primary btn-sm">
+                        <FaUsers className="me-1" /> Ver Miembros
+                    </Link>
+                    <Link to="/categoria" className="btn btn-outline-success btn-sm">
+                        <FaTags className="me-1" /> Ver Categorías
+                    </Link>
+                    <Link to="/gasto" className="btn btn-outline-danger btn-sm">
+                        <FaWallet className="me-1" /> Ver Gastos
+                    </Link>
+                    <Link to="/balance" className="btn btn-outline-dark btn-sm">
+                        <FaBalanceScale className="me-1" /> Ver Balance
+                    </Link>
+                </div>
+            </div>
 
         </div>
     )
