@@ -15,29 +15,25 @@ class EmailDuplicadoError(Exception):
 class PersonaDAO:
     def __init__(self):
         self.__log = Logger()
-        
-def insertar(self, persona):
-    """Agrega una nueva persona verificando que el email no esté duplicado."""
 
-    if self.buscar_por_email(persona.email):
-        self.__log.warning(f"Email duplicado: {persona.email}")
-        raise EmailDuplicadoError(persona.email)
-
-    persona.fecha_registro = str(date.today())
-    conn = obtener_conexion()
-    cursor = conn.cursor()
-    cursor.execute(
+    def insertar(self, persona):
+        if self.buscar_por_email(persona.email):
+            self.__log.warning(f"Email duplicado: {persona.email}")
+            raise EmailDuplicadoError(persona.email)
+        persona.fecha_registro = str(date.today())
+        conn = obtener_conexion()
+        cursor = conn.cursor()
+        cursor.execute(
             "INSERT INTO personas (nombre, email, fecha_registro) VALUES (?, ?, ?)",
             (persona.nombre, persona.email, persona.fecha_registro)
         )
-    conn.commit()
-    persona.id = cursor.lastrowid
-    conn.close()
-    self.__log.info(f"Persona agregada: {persona.nombre} (ID={persona.id})")
-    return persona
+        conn.commit()
+        persona.id = cursor.lastrowid
+        conn.close()
+        self.__log.info(f"Persona agregada: {persona.nombre} (ID={persona.id})")
+        return persona
 
-
-def buscar_por_email(self, email):
+    def buscar_por_email(self, email):
         conn = obtener_conexion()
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM personas WHERE email = ?", (email,))
@@ -45,7 +41,7 @@ def buscar_por_email(self, email):
         conn.close()
         return self.__fila_a_persona(fila) if fila else None
 
-def buscar_por_id(self, persona_id):
+    def buscar_por_id(self, persona_id):
         conn = obtener_conexion()
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM personas WHERE id = ?", (persona_id,))
@@ -53,8 +49,7 @@ def buscar_por_id(self, persona_id):
         conn.close()
         return self.__fila_a_persona(fila) if fila else None
 
-
-def obtener_todos(self):
+    def obtener_todos(self):
         conn = obtener_conexion()
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM personas ORDER BY nombre")
@@ -62,8 +57,7 @@ def obtener_todos(self):
         conn.close()
         return [self.__fila_a_persona(f) for f in filas]
 
-
-def actualizar(self, persona_id, nombre=None, email=None):
+    def actualizar(self, persona_id, nombre=None, email=None):
         p = self.buscar_por_id(persona_id)
         if not p:
             self.__log.error(f"Actualizar fallido: Persona ID={persona_id} no existe")
@@ -81,7 +75,7 @@ def actualizar(self, persona_id, nombre=None, email=None):
         self.__log.info(f"Persona actualizada: ID={persona_id}")
         return p
 
-def eliminar(self, persona_id):
+    def eliminar(self, persona_id):
         p = self.buscar_por_id(persona_id)
         if not p:
             self.__log.error(f"Eliminar fallido: Persona ID={persona_id} no existe")
@@ -99,7 +93,7 @@ def eliminar(self, persona_id):
         self.__log.info(f"Persona eliminada: {p.nombre} (ID={persona_id})")
         return True
 
-def total(self):
+    def total(self):
         conn = obtener_conexion()
         cursor = conn.cursor()
         cursor.execute("SELECT COUNT(*) FROM personas")
@@ -107,3 +101,7 @@ def total(self):
         conn.close()
         return total
 
+    def __fila_a_persona(self, fila):
+        p = Persona(fila["nombre"], fila["email"], fila["fecha_registro"])
+        p.id = fila["id"]
+        return p
