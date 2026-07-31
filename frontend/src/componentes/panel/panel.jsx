@@ -78,7 +78,46 @@ function Panel() {
 
             </div>
 
-            
+            {/* Gastos recientes + barras categoría */}
+            <div className="row">
+
+                {/* Gastos recientes */}
+                <div className="col-md-8 mb-4">
+                    <div className="panel-card">
+                        <div className="d-flex justify-content-between align-items-center mb-3">
+                            <h6 className="panel-titulo mb-0">Gastos recientes</h6>
+                            <Link to="/gasto"
+                                style={{ color: "var(--accent)", fontSize: "0.84rem", fontWeight: 600 }}>
+                                Ver todos →
+                            </Link>
+                        </div>
+
+                        <table className="table tabla-sh table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Descripción</th>
+                                    <th>Categoría</th>
+                                    <th>Pagó</th>
+                                    <th>Monto</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {gastosRecientes.map((g, i) => (
+                                    <tr key={i}>
+                                        <td>{g.descripcion}</td>
+                                        <td>{g.categoria}</td>
+                                        <td>{g.persona}</td>
+                                        <td>
+                                            <span className="badge-monto">
+                                                S/. {g.monto.toFixed(2)}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
         </div>
     )
