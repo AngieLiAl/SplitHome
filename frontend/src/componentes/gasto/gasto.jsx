@@ -273,13 +273,95 @@ function eliminarGasto(id) {
                     </div>
                 </div>
 
+                {/* Tabla de gastos */}
+                <div className="col-md-8 mb-4">
 
+                    {/* Buscador */}
+                    <input
+                        type="text"
+                        className="form-control mb-3"
+                        placeholder="🔍 Buscar gasto..."
+                        value={busqueda}
+                        onChange={e => setBusqueda(e.target.value)}
+                    />
 
-
-
-
-            </div> 
-        </div>  
+                    {gastosFiltrados.length === 0 ? (
+                        <div className="text-center text-muted py-5">
+                            <FaWallet size={40} style={{ opacity: 0.2 }} />
+                            <p className="mt-2">No hay gastos registrados.</p>
+                        </div>
+                    ) : (
+                        <div className="panel-card p-0" style={{ overflow: "hidden" }}>
+                            <table className="table tabla-sh table-hover mb-0">
+                                <thead>
+                                    <tr>
+                                        <th className="ps-3">Descripción</th>
+                                        <th>Categoría</th>
+                                        <th>Pagó</th>
+                                        <th>Fecha</th>
+                                        <th>Monto</th>
+                                        <th>Compartido</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {gastosFiltrados.map((g) => (
+                                        <tr key={g.id}>
+                                            <td className="ps-3">{g.descripcion}</td>
+                                            <td>{getNombreCategoria(g.idCategoria)}</td>
+                                            <td>{getNombrePersona(g.idPersona)}</td>
+                                            <td>{g.fecha}</td>
+                                            <td>
+                                                <span className="badge-monto">
+                                                    S/. {g.monto.toFixed(2)}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span className="badge rounded-pill"
+                                                    style={{
+                                                        background: g.esCompartido ? "var(--ok-bg)" : "var(--mid)",
+                                                        color: g.esCompartido ? "var(--accent2)" : "var(--muted)",
+                                                        fontSize: "0.76rem"
+                                                    }}>
+                                                    {g.esCompartido ? "Sí" : "No"}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <div className="d-flex gap-1 justify-content-end pe-2">
+                                                    <button
+                                                        className="btn btn-sm"
+                                                        style={{
+                                                            background: "var(--mid)",
+                                                            borderRadius: "var(--r-sm)",
+                                                            width: "30px", height: "30px",
+                                                            padding: 0
+                                                        }}
+                                                        onClick={() => editarGasto(g)}>
+                                                        ✏️
+                                                    </button>
+                                                    <button
+                                                        className="btn btn-sm"
+                                                        style={{
+                                                            background: "var(--danger-bg)",
+                                                            borderRadius: "var(--r-sm)",
+                                                            width: "30px", height: "30px",
+                                                            padding: 0
+                                                        }}
+                                                        onClick={() => eliminarGasto(g.id)}>
+                                                        🗑️
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
     )
 }
+
 export default Gasto
