@@ -152,9 +152,43 @@ function Balance() {
                 </div>
             </div>
 
+            {/* ¿Quién le debe a quién? */}
+            <div className="panel-card">
+                <h6 className="panel-titulo">¿Quién le debe a quién?</h6>
 
+                {personas.map((p) => {
+                    const diff = calcularDiff(p.id)
 
+                    if (diff >= 0) return null
 
+                    const acreedor = personas.find(a => calcularDiff(a.id) > 0)
+
+                    return (
+                        <div className="d-flex align-items-center gap-3 py-2"
+                            key={p.id}
+                            style={{ borderBottom: "1px solid var(--mid)" }}>
+                            <div style={{ fontSize: "1.5rem" }}>💸</div>
+                            <div className="flex-grow-1">
+                                <div className="fw-semibold" style={{ fontSize: "0.9rem" }}>
+                                    {p.nombre} le debe a {acreedor ? acreedor.nombre : "—"}
+                                </div>
+                                <div className="text-muted" style={{ fontSize: "0.78rem" }}>
+                                    Para equilibrar el balance del hogar
+                                </div>
+                            </div>
+                            <span className="badge-monto">
+                                S/. {Math.abs(diff).toFixed(2)}
+                            </span>
+                        </div>
+                    )
+                })}
+
+                {personas.every(p => calcularDiff(p.id) === 0) && (
+                    <p className="text-muted text-center py-3 mb-0">
+                        🎉 Todo está equilibrado entre los miembros
+                    </p>
+                )}
+            </div>
 
         </div>
     )
