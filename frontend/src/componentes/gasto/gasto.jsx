@@ -37,26 +37,75 @@ function Gasto() {
     ])
 
 // ── Helpers ──────────────────────────────────────────────
-    function getNombreCategoria(id) {
-        const c = categorias.find(c => c.id === id)
-        return c ? c.icono + " " + c.nombre : "—"
+function getNombreCategoria(id) {
+    const c = categorias.find(c => c.id === id)
+    return c ? c.icono + " " + c.nombre : "—"
+}
+
+function getNombrePersona(id) {
+    const p = personas.find(p => p.id === id)
+    return p ? p.nombre : "—"
+}
+
+function limpiarFormulario() {
+    setDescripcion("")
+    setMonto("")
+    setFecha("")
+    setIdCategoria("")
+    setIdPersona("")
+    setEsCompartido(false)
+    setError("")
+    setEditandoId(null)
+}
+
+    // ── Validar y guardar ────────────────────────────────────
+function guardarGasto() {
+    if (!descripcion.trim()) {
+        setError("La descripción es obligatoria")
+        return
+    }
+    if (!monto || Number(monto) <= 0) {
+        setError("El monto debe ser mayor a 0")
+        return
+    }
+    if (!fecha) {
+        setError("La fecha es obligatoria")
+        return
+    }
+    if (!idCategoria) {
+        setError("Selecciona una categoría")
+        return
+    }
+    if (!idPersona) {
+        setError("Selecciona quién pagó")
+        return
     }
 
-    function getNombrePersona(id) {
-        const p = personas.find(p => p.id === id)
-        return p ? p.nombre : "—"
+    if (editandoId !== null) {
+        // Actualizar gasto existente
+        setGastos(gastos.map(g =>
+            g.id === editandoId
+                ? { ...g, descripcion, monto: Number(monto), fecha,
+                    idCategoria: Number(idCategoria),
+                    idPersona: Number(idPersona), esCompartido }
+                : g
+        ))
+    } else {
+         // Crear nuevo gasto
+        const nuevo = {
+            id:           gastos.length + 1,
+            descripcion:  descripcion.trim(),
+            monto:        Number(monto),
+            fecha,
+            idCategoria:  Number(idCategoria),
+            idPersona:    Number(idPersona),
+            esCompartido
+        }
+        setGastos([...gastos, nuevo])
     }
+    limpiarFormulario()
+}
 
-    function limpiarFormulario() {
-        setDescripcion("")
-        setMonto("")
-        setFecha("")
-        setIdCategoria("")
-        setIdPersona("")
-        setEsCompartido(false)
-        setError("")
-        setEditandoId(null)
-    }
 
 
 }
