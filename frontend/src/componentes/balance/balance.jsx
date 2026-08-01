@@ -41,8 +41,37 @@ function Balance() {
         return calcularPagado(idPersona) - promedio
     }
 
-    
+    return (
+        <div>
 
+            {/* Encabezado */}
+            <div className="d-flex justify-content-between align-items-end flex-wrap gap-3 mb-4">
+                <div>
+                    <h2 className="fw-bold mb-1"
+                        style={{ fontFamily: "Playfair Display, serif" }}>
+                        Balance entre miembros
+                    </h2>
+                    <p className="text-muted mb-0">
+                        Así está repartida la cuenta del hogar hoy.
+                    </p>
+                </div>
+                <span className="badge rounded-pill"
+                    style={{ background: "var(--accent)", fontSize: "0.9rem", padding: "0.5rem 1rem" }}>
+                    <FaBalanceScale className="me-1" />
+                    Total: S/. {totalGeneral.toFixed(2)}
+                </span>
+            </div>
+
+            
+
+
+
+
+
+
+
+        </div>
+    )
 }
 
 export default Balance
