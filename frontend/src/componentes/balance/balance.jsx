@@ -62,9 +62,66 @@ function Balance() {
                 </span>
             </div>
 
+            {/* Tarjetas de balance por persona */}
+            <div className="row mb-4">
+                {personas.map((p) => {
+                    const pagado = calcularPagado(p.id)
+                    const diff   = calcularDiff(p.id)
+
+                    return (
+                        <div className="col-md-6 mb-3" key={p.id}>
+                            <div className="balance-card">
+
+                                {/* Avatar */}
+                                <div className="balance-avatar">
+                                    {iniciales(p.nombre)}
+                                </div>
+
+                                {/* Info */}
+                                <div className="flex-grow-1">
+                                    <div className="fw-semibold">{p.nombre}</div>
+                                    <div className="text-muted" style={{ fontSize: "0.78rem" }}>
+                                        {p.email}
+                                    </div>
+                                    <div className="mt-1" style={{ fontSize: "0.82rem" }}>
+                                        Pagó: <strong>S/. {pagado.toFixed(2)}</strong>
+                                    </div>
+                                    <div style={{ fontSize: "0.8rem" }}>
+                                        Le corresponde: <strong>S/. {promedio.toFixed(2)}</strong>
+                                    </div>
+                                    <div className="mt-1">
+                                        {diff > 0 ? (
+                                            <span className="text-recibe fw-semibold">
+                                                ✅ Le deben S/. {diff.toFixed(2)}
+                                            </span>
+                                        ) : diff < 0 ? (
+                                            <span className="text-debe fw-semibold">
+                                                ⚠️ Debe S/. {Math.abs(diff).toFixed(2)}
+                                            </span>
+                                        ) : (
+                                            <span className="text-muted fw-semibold">
+                                                ✓ Al día
+                                            </span>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Monto destacado */}
+                                <div style={{
+                                    fontFamily: "Playfair Display, serif",
+                                    fontSize: "1.3rem",
+                                    color: diff >= 0 ? "var(--accent2)" : "var(--danger)"
+                                }}>
+                                    S/. {Math.abs(diff).toFixed(2)}
+                                </div>
+
+                            </div>
+                        </div>
+                    )
+                })}
+            </div>
+
             
-
-
 
 
 
