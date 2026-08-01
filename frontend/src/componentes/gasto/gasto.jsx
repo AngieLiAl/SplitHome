@@ -151,11 +151,134 @@ function eliminarGasto(id) {
                 </span>
             </div>
 
+            <div className="row">
+                {/* Formulario */}
+                <div className="col-md-4 mb-4">
+                    <div className="form-card">
+                        <h6 className="form-titulo">
+                            {editandoId ? "✏️ Editar Gasto" : "🧾 Nuevo Gasto"}
+                        </h6>
+
+                        {error && (
+                            <div className="alert alert-danger py-2 px-3 mb-3"
+                                style={{ fontSize: "0.84rem", borderRadius: "var(--r-sm)" }}>
+                                {error}
+                            </div>
+                        )}
+
+                        <label className="form-label fw-semibold"
+                            style={{ fontSize: "0.82rem" }}>
+                            Descripción
+                        </label>
+                        <input
+                            type="text"
+                            className="form-control mb-3"
+                            placeholder="Ej: Recibo de luz"
+                            value={descripcion}
+                            onChange={e => setDescripcion(e.target.value)}
+                        />
+
+                        <label className="form-label fw-semibold"
+                            style={{ fontSize: "0.82rem" }}>
+                            Monto (S/.)
+                        </label>
+                        <input
+                            type="number"
+                            className="form-control mb-3"
+                            placeholder="0.00"
+                            min="0"
+                            step="0.01"
+                            value={monto}
+                            onChange={e => setMonto(e.target.value)}
+                        />
+
+                        <label className="form-label fw-semibold"
+                            style={{ fontSize: "0.82rem" }}>
+                            Fecha
+                        </label>
+                        <input
+                            type="date"
+                            className="form-control mb-3"
+                            value={fecha}
+                            onChange={e => setFecha(e.target.value)}
+                        />
+
+                        <label className="form-label fw-semibold"
+                            style={{ fontSize: "0.82rem" }}>
+                            Categoría
+                        </label>
+                        <select
+                            className="form-select mb-3"
+                            value={idCategoria}
+                            onChange={e => setIdCategoria(e.target.value)}>
+                            <option value="">Selecciona una categoría</option>
+                            {categorias.map(c => (
+                                <option key={c.id} value={c.id}>
+                                    {c.icono} {c.nombre}
+                                </option>
+                            ))}
+                        </select>
+
+                        <label className="form-label fw-semibold"
+                            style={{ fontSize: "0.82rem" }}>
+                            ¿Quién pagó?
+                        </label>
+                        <select
+                            className="form-select mb-3"
+                            value={idPersona}
+                            onChange={e => setIdPersona(e.target.value)}>
+                            <option value="">Selecciona un miembro</option>
+                            {personas.map(p => (
+                                <option key={p.id} value={p.id}>
+                                    {p.nombre}
+                                </option>
+                            ))}
+                        </select>
+
+                        <div className="form-check mb-3">
+                            <input
+                                type="checkbox"
+                                className="form-check-input"
+                                id="esCompartido"
+                                checked={esCompartido}
+                                onChange={e => setEsCompartido(e.target.checked)}
+                            />
+                            <label className="form-check-label"
+                                style={{ fontSize: "0.84rem" }}
+                                htmlFor="esCompartido">
+                                Dividir entre los miembros del hogar
+                            </label>
+                        </div>
+
+                        <div className="d-flex gap-2">
+                            {editandoId && (
+                                <button
+                                    className="btn btn-outline-secondary w-50 fw-semibold"
+                                    style={{ borderRadius: "var(--r-sm)" }}
+                                    onClick={limpiarFormulario}>
+                                    Cancelar
+                                </button>
+                            )}
+                            <button
+                                className="btn text-white fw-semibold"
+                                style={{
+                                    background: "var(--accent)",
+                                    borderRadius: "var(--r-sm)",
+                                    width: editandoId ? "50%" : "100%"
+                                }}
+                                onClick={guardarGasto}>
+                                {editandoId ? "Guardar cambios" : "+ Agregar gasto"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
 
 
 
-            
+
+
+            </div> 
         </div>  
     )
 }
