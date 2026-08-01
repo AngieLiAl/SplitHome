@@ -68,6 +68,66 @@ function Categoria() {
                     {categorias.length} categorías
                 </span>
             </div>
+
+            <div className="row">
+
+                {/* Formulario */}
+                <div className="col-md-4 mb-4">
+                    <div className="form-card">
+                        <h6 className="form-titulo">🏷️ Nueva Categoría</h6>
+
+                        {error && (
+                            <div className="alert alert-danger py-2 px-3 mb-3"
+                                style={{ fontSize: "0.84rem", borderRadius: "var(--r-sm)" }}>
+                                {error}
+                            </div>
+                        )}
+
+                        <label className="form-label fw-semibold"
+                            style={{ fontSize: "0.82rem" }}>
+                            Nombre
+                        </label>
+                        <input
+                            type="text"
+                            className="form-control mb-3"
+                            placeholder="Ej: Mascotas"
+                            value={nombre}
+                            onChange={e => setNombre(e.target.value)}
+                        />
+
+                        <label className="form-label fw-semibold"
+                            style={{ fontSize: "0.82rem" }}>
+                            Ícono (emoji)
+                        </label>
+                        <input
+                            type="text"
+                            className="form-control mb-3"
+                            placeholder="🐾"
+                            maxLength={2}
+                            value={icono}
+                            onChange={e => setIcono(e.target.value)}
+                        />
+
+                        <label className="form-label fw-semibold"
+                            style={{ fontSize: "0.82rem" }}>
+                            Descripción
+                        </label>
+                        <input
+                            type="text"
+                            className="form-control mb-3"
+                            placeholder="Descripción opcional"
+                            value={descripcion}
+                            onChange={e => setDescripcion(e.target.value)}
+                        />
+
+                        <button
+                            className="btn w-100 text-white fw-semibold"
+                            style={{ background: "var(--accent)", borderRadius: "var(--r-sm)" }}
+                            onClick={agregarCategoria}>
+                            + Agregar categoría
+                        </button>
+                    </div>
+                </div>
         </div>
     )
 }
