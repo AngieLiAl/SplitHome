@@ -150,6 +150,33 @@ function Categoria() {
                                 <div className="col-6 col-md-4" key={c.id}>
                                     <div className="cat-card position-relative">
 
+                                        {/* Botón eliminar */}
+                                        <button
+                                            className="btn btn-sm position-absolute"
+                                            style={{
+                                                top: "0.5rem", right: "0.5rem",
+                                                background: "var(--mid)",
+                                                borderRadius: "50%",
+                                                width: "24px", height: "24px",
+                                                fontSize: "0.7rem",
+                                                color: "var(--muted)",
+                                                padding: 0
+                                            }}
+                                            onClick={() => eliminarCategoria(c.id)}>
+                                            ✕
+                                        </button>
+
+                                        <div className="cat-ico">{c.icono}</div>
+                                        <div className="fw-semibold" style={{ fontSize: "0.9rem" }}>
+                                            {c.nombre}
+                                        </div>
+
+                                        {c.descripcion && (
+                                            <div className="text-muted mt-1"
+                                                style={{ fontSize: "0.76rem" }}>
+                                                {c.descripcion}
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             ))}
