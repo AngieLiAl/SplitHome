@@ -128,6 +128,36 @@ function Categoria() {
                         </button>
                     </div>
                 </div>
+                {/* Grid de categorías */}
+                <div className="col-md-8 mb-4">
+                    {/* Buscador */}
+                    <input
+                        type="text"
+                        className="form-control mb-3"
+                        placeholder="🔍 Buscar categoría..."
+                        value={busqueda}
+                        onChange={e => setBusqueda(e.target.value)}
+                    />
+
+                    {categoriasFiltradas.length === 0 ? (
+                        <div className="text-center text-muted py-5">
+                            <FaTags size={40} style={{ opacity: 0.2 }} />
+                            <p className="mt-2">No hay categorías registradas.</p>
+                        </div>
+                    ) : (
+                        <div className="row g-3">
+                            {categoriasFiltradas.map((c, i) => (
+                                <div className="col-6 col-md-4" key={c.id}>
+                                    <div className="cat-card position-relative">
+
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+
+            </div>
         </div>
     )
 }
