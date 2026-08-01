@@ -36,8 +36,28 @@ function Gasto() {
         { id: 5, descripcion: "Mercado semanal", monto: 180.00,  fecha: "2025-01-05", idCategoria: 5, idPersona: 2, esCompartido: false },
     ])
 
+// ── Helpers ──────────────────────────────────────────────
+    function getNombreCategoria(id) {
+        const c = categorias.find(c => c.id === id)
+        return c ? c.icono + " " + c.nombre : "—"
+    }
 
-    
+    function getNombrePersona(id) {
+        const p = personas.find(p => p.id === id)
+        return p ? p.nombre : "—"
+    }
+
+    function limpiarFormulario() {
+        setDescripcion("")
+        setMonto("")
+        setFecha("")
+        setIdCategoria("")
+        setIdPersona("")
+        setEsCompartido(false)
+        setError("")
+        setEditandoId(null)
+    }
+
 
 }
 export default Gasto
