@@ -176,3 +176,5 @@ function Panel() {
         </div>
     )
 }
+
+export default Panel
