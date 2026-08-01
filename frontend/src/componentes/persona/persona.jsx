@@ -54,7 +54,7 @@ function Persona() {
 
     return (
         <div>
-
+            
         </div>
     )
 }
