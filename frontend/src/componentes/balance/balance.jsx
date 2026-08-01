@@ -16,6 +16,31 @@ function Balance() {
         { id: 5, descripcion: "Mercado semanal", monto: 180.00,  idPersona: 2, esCompartido: false },
     ]
 
+    // ── Calcular cuánto pagó cada persona ────────────────────
+    function calcularPagado(idPersona) {
+        return gastos
+            .filter(g => g.idPersona === idPersona)
+            .reduce((acc, g) => acc + g.monto, 0)
+    }
+
+    // ── Total general ────────────────────────────────────────
+    const totalGeneral = gastos.reduce((acc, g) => acc + g.monto, 0)
+
+    // ── Promedio que debería pagar cada uno ──────────────────
+    const promedio = totalGeneral / personas.length
+
+    // ── Iniciales para el avatar ─────────────────────────────
+    function iniciales(nombre) {
+        return nombre.split(" ").map(p => p[0]).slice(0, 2).join("").toUpperCase()
+    }
+
+    // ── Calcular deudas ──────────────────────────────────────
+    // diff positivo = le deben dinero
+    // diff negativo = debe dinero
+    function calcularDiff(idPersona) {
+        return calcularPagado(idPersona) - promedio
+    }
+
     
 
 }
