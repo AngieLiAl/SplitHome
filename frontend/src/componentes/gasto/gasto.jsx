@@ -106,6 +106,23 @@ function guardarGasto() {
     limpiarFormulario()
 }
 
+// ── Editar gasto ─────────────────────────────────────────
+function editarGasto(g) {
+    setEditandoId(g.id)
+    setDescripcion(g.descripcion)
+    setMonto(String(g.monto))
+    setFecha(g.fecha)
+    setIdCategoria(String(g.idCategoria))
+    setIdPersona(String(g.idPersona))
+    setEsCompartido(g.esCompartido)
+    setError("")
+}
+
+// ── Eliminar gasto ───────────────────────────────────────
+function eliminarGasto(id) {
+    setGastos(gastos.filter(g => g.id !== id))
+}
+
 
 
 }
