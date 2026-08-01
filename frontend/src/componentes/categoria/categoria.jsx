@@ -16,6 +16,38 @@ function Categoria() {
         { id: 6, nombre: "Limpieza",  icono: "🧹", descripcion: "Productos de limpieza"     },
         { id: 7, nombre: "Otros",     icono: "📦", descripcion: "Gastos varios"             },
     ])
+    // ── Agregar categoría ────────────────────────────────────
+    function agregarCategoria() {
+        if (!nombre.trim()) {
+            setError("El nombre es obligatorio")
+            return
+        }
+        if (categorias.some(c => c.nombre.toLowerCase() === nombre.toLowerCase())) {
+            setError("Esa categoría ya existe")
+            return
+        }
+        const nueva = {
+            id:          categorias.length + 1,
+            nombre:      nombre.trim(),
+            icono:       icono.trim() || "📦",
+            descripcion: descripcion.trim()
+        }
+        setCategorias([...categorias, nueva])
+        setNombre("")
+        setIcono("")
+        setDescripcion("")
+        setError("")
+    }
+
+    // ── Eliminar categoría ───────────────────────────────────
+    function eliminarCategoria(id) {
+        setCategorias(categorias.filter(c => c.id !== id))
+    }
+
+    // ── Filtrar por búsqueda ─────────────────────────────────
+    const categoriasFiltradas = categorias.filter(c =>
+        c.nombre.toLowerCase().includes(busqueda.toLowerCase())
+    )
 
     return (
         <div>
