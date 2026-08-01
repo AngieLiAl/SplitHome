@@ -51,7 +51,23 @@ function Categoria() {
 
     return (
         <div>
-
+            {/* Encabezado */}
+            <div className="d-flex justify-content-between align-items-end flex-wrap gap-3 mb-4">
+                <div>
+                    <h2 className="fw-bold mb-1"
+                        style={{ fontFamily: "Playfair Display, serif" }}>
+                        Categorías de gasto
+                    </h2>
+                    <p className="text-muted mb-0">
+                        Organiza los tipos de gasto de tu hogar.
+                    </p>
+                </div>
+                <span className="badge rounded-pill"
+                    style={{ background: "var(--accent)", fontSize: "0.9rem", padding: "0.5rem 1rem" }}>
+                    <FaTags className="me-1" />
+                    {categorias.length} categorías
+                </span>
+            </div>
         </div>
     )
 }
