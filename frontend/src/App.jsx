@@ -1,121 +1,90 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { Routes, Route, NavLink, useLocation } from "react-router-dom"
+import { FaHome, FaUsers, FaTags, FaWallet, FaBalanceScale } from "react-icons/fa"
+import Panel from "./componentes/panel/Panel"
+import Persona from "./componentes/persona/Persona"
+import Categoria from "./componentes/categoria/Categoria"
+import Gasto from "./componentes/gasto/Gasto"
+import Balance from "./componentes/balance/Balance"
+import "./App.css"
+
+const titulos = {
+  "/panel":     "Inicio",
+  "/":          "Inicio",
+  "/persona":   "Miembros",
+  "/categoria": "Categorías",
+  "/gasto":     "Gastos",
+  "/balance":   "Balance",
+}
 
 function App() {
-  const [count, setCount] = useState(0)
+  const location = useLocation()
+  const titulo = titulos[location.pathname] || "SplitHome"
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="app-shell">
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+      {/* ── SIDEBAR ── */}
+      <aside className="sidebar">
+        <div className="sidebar-logo mb-1">
+          Split<em>Home</em>
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+        <div className="hogar-pill mb-4">
+          <span className="hogar-dot"></span>
+          <span>Depa 304</span>
+        </div>
+
+        <nav className="side-nav">
+          <NavLink to="/panel" className={({isActive}) => "nav-btn" + (isActive ? " activo" : "")}>
+            <FaHome /> Inicio
+          </NavLink>
+          <NavLink to="/persona" className={({isActive}) => "nav-btn" + (isActive ? " activo" : "")}>
+            <FaUsers /> Miembros
+          </NavLink>
+          <NavLink to="/categoria" className={({isActive}) => "nav-btn" + (isActive ? " activo" : "")}>
+            <FaTags /> Categorías
+          </NavLink>
+          <NavLink to="/gasto" className={({isActive}) => "nav-btn" + (isActive ? " activo" : "")}>
+            <FaWallet /> Gastos
+          </NavLink>
+          <NavLink to="/balance" className={({isActive}) => "nav-btn" + (isActive ? " activo" : "")}>
+            <FaBalanceScale /> Balance
+          </NavLink>
+        </nav>
+
+        <div className="side-bottom">
+          <button className="nav-btn" onClick={() => alert("Cerrando sesión...")}>
+            ↩ Cerrar sesión
+          </button>
+        </div>
+      </aside>
+
+      {/* ── CONTENIDO PRINCIPAL ── */}
+      <div className="app-main">
+
+        {/* Topbar */}
+        <header className="topbar">
+          <span className="topbar-title">{titulo}</span>
+          <div className="d-flex align-items-center gap-2">
+            <div className="avatar">AL</div>
+            <span style={{fontSize:"0.88rem", fontWeight:500}}>Angie</span>
+          </div>
+        </header>
+
+        {/* Rutas */}
+        <div className="p-4">
+          <Routes>
+            <Route path="/"          element={<Panel />} />
+            <Route path="/panel"     element={<Panel />} />
+            <Route path="/persona"   element={<Persona />} />
+            <Route path="/categoria" element={<Categoria />} />
+            <Route path="/gasto"     element={<Gasto />} />
+            <Route path="/balance"   element={<Balance />} />
+          </Routes>
+        </div>
+
+      </div>
+    </div>
   )
 }
 
