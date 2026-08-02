@@ -9,12 +9,15 @@ import psycopg2
 from config.logger import Logger
 from config.base_datos import obtener_conexion
 
+# Error personalizado cuando no se encuentra una participación
 class ParticipacionNoEncontradaError(Exception):
     def __init__(self, id_gasto, id_persona):
-        super().__init__(f"Participacion Gasto ID={id_gasto} Persona ID={id_persona} no encontrada")
+        super().__init__(f"Participacion Gasto ID= {id_gasto} "
+            f"Persona ID={id_persona} no encontrada")
 
 class ParticipacionDAO:
     def __init__(self):
+        # Usamos el mismo historial de eventos que todo el sistema
         self.__log = Logger()
 
     def insertar(self, id_gasto, id_persona, proporcion, monto_asignado):
