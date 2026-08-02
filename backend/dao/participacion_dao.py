@@ -1,9 +1,11 @@
 # ──────────────────────────────────────────────────────────────
 # DAO — ParticipacionDAO
-# Encapsula el acceso a la tabla participacion.
-# Registra qué personas participan en un gasto compartido
-# y cuánto le corresponde pagar a cada una.
+# Se encarga de registrar quién participa en cada gasto
+# compartido y cuánto le toca pagar a cada uno.
+# Antes usaba una lista en memoria, ahora usa la base de datos
+# real de PostgreSQL para guardar esa información.
 # ──────────────────────────────────────────────────────────────
+import psycopg2
 from config.logger import Logger
 from config.base_datos import obtener_conexion
 
