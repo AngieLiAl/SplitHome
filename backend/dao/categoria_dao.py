@@ -10,16 +10,19 @@ from config.logger import Logger
 from config.base_datos import obtener_conexion
 from modelos.categoria import Categoria
 
+# Error personalizado cuando no se encuentra una categoría
 class CategoriaNoEncontradaError(Exception):
     def __init__(self, categoria_id):
         super().__init__(f"Categoría ID={categoria_id} no encontrada")
 
+# Error personalizado cuando la categoría ya existe
 class CategoriaDuplicadaError(Exception):
     def __init__(self, nombre):
         super().__init__(f"Categoría '{nombre}' ya existe")
 
 class CategoriaDAO:
     def __init__(self):
+        # Usamos el mismo historial de eventos que todo el sistema
         self.__log = Logger()
 
         
