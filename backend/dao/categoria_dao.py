@@ -25,21 +25,6 @@ class CategoriaDAO:
         # Usamos el mismo historial de eventos que todo el sistema
         self.__log = Logger()
 
-        
-    def _cargar_categorias_base(self):
-        """Carga las categorías predeterminadas del hogar al iniciar."""
-        bases = [
-            ("Alquiler", "🏠"), ("Luz",      "💡"),
-            ("Agua",     "💧"), ("Internet", "📶"),
-            ("Comida",   "🍛"), ("Limpieza", "🧹"),
-            ("Otros",    "📦"),
-        ]
-        for nombre, icono in bases:
-            c = Categoria(nombre, icono)
-            c.id = self.__cid
-            self.__cid += 1
-            self.__bd.append(c)
-            
     def insertar(self, categoria):
         if self.buscar_por_nombre(categoria.nombre):
             self.__log.warning(f"Categoría duplicada: {categoria.nombre}")
