@@ -2,13 +2,16 @@ import { useState } from "react"
 import { FaUsers } from "react-icons/fa"
 
 function Persona() {
+
     const [nombre,   setNombre]   = useState("")
     const [email,    setEmail]    = useState("")
     const [busqueda, setBusqueda] = useState("")
+
     const [personas, setPersonas] = useState([
         { id: 1, nombre: "Angie Lizarsaburu",  email: "angie@splithome.pe",  fecha: "2025-01-01" },
         { id: 2, nombre: "Angela Escobedo",     email: "angela@splithome.pe", fecha: "2025-01-01" },
     ])
+
     const [error, setError] = useState("")
 
     // ── Agregar persona ──────────────────────────────────────
@@ -25,6 +28,7 @@ function Persona() {
             setError("Ese email ya está registrado")
             return
         }
+
         const nueva = {
             id:     personas.length + 1,
             nombre: nombre.trim(),
@@ -54,7 +58,8 @@ function Persona() {
 
     return (
         <div>
-            {/* Encabezadoo */}
+
+            {/* Encabezado */}
             <div className="d-flex justify-content-between align-items-end flex-wrap gap-3 mb-4">
                 <div>
                     <h2 className="fw-bold mb-1"
@@ -71,6 +76,7 @@ function Persona() {
                     {personas.length} miembros
                 </span>
             </div>
+
             <div className="row">
 
                 {/* Formulario */}
@@ -115,8 +121,10 @@ function Persona() {
                         </button>
                     </div>
                 </div>
-            {/* Lista de miembros */}
+
+                {/* Lista de miembros */}
                 <div className="col-md-8 mb-4">
+
                     {/* Buscador */}
                     <input
                         type="text"
@@ -137,13 +145,55 @@ function Persona() {
                                 <div className="col-md-6" key={p.id}>
                                     <div className="member-card">
 
+                                        {/* Botón eliminar */}
+                                        <button
+                                            className="btn btn-sm position-absolute"
+                                            style={{
+                                                top: "0.6rem", right: "0.6rem",
+                                                background: "var(--mid)",
+                                                borderRadius: "50%",
+                                                width: "26px", height: "26px",
+                                                fontSize: "0.7rem",
+                                                color: "var(--muted)",
+                                                padding: 0
+                                            }}
+                                            onClick={() => eliminarPersona(p.id)}>
+                                            ✕
+                                        </button>
+
+                                        {/* Avatar */}
+                                        <div className="member-avatar">
+                                            {iniciales(p.nombre)}
+                                        </div>
+
+                                        <div className="fw-semibold mb-1">{p.nombre}</div>
+                                        <div className="text-muted mb-2"
+                                            style={{ fontSize: "0.8rem" }}>
+                                            {p.email}
+                                        </div>
+
+                                        <span style={{
+                                            fontSize: "0.72rem",
+                                            background: "var(--ok-bg)",
+                                            color: "var(--accent2)",
+                                            padding: "0.2rem 0.6rem",
+                                            borderRadius: "99px",
+                                            fontWeight: 600
+                                        }}>
+                                            Activo
+                                        </span>
+
+                                        <div className="text-muted mt-2"
+                                            style={{ fontSize: "0.74rem" }}>
+                                            Desde {p.fecha}
+                                        </div>
+
                                     </div>
                                 </div>
                             ))}
                         </div>
                     )}
                 </div>
-
             </div>
         </div>
     )
