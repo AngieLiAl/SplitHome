@@ -96,6 +96,8 @@ class PersonaDAO:
         return p
 
     def eliminar(self, persona_id):
+        # Elimina una persona, pero si tiene gastos asociados
+        # PostgreSQL lanza un error de integridad que capturamos
         p = self.buscar_por_id(persona_id)
         if not p:
             self.__log.error(f"Eliminar fallido: Persona ID={persona_id} no existe")
@@ -103,9 +105,9 @@ class PersonaDAO:
         conn = obtener_conexion()
         cursor = conn.cursor()
         try:
-            cursor.execute("DELETE FROM personas WHERE id = ?", (persona_id,))
+            cursor.execute("DELETE FROM persona WHERE id_persona = %s", (persona_id,))
             conn.commit()
-        except sqlite3.IntegrityError:
+        except psycopg2.IntegrityError:
             conn.close()
             self.__log.warning(f"Persona ID={persona_id} tiene gastos asociados")
             raise
