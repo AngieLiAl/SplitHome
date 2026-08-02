@@ -41,9 +41,9 @@ class PersonaDAO:
             """INSERT INTO personas (nombre, email, fecha_registro) (%s, %s, %s) RETURNING id_persona""",
             (persona.nombre, persona.email, persona.fecha_registro)
         )
-        
+        # Guardamos el id que PostgreSQL generó en el objeto persona
+        persona.id = cursor.fetchone()["id_persona"]
         conn.commit()
-        persona.id = cursor.lastrowid
         conn.close()
         self.__log.info(f"Persona agregada: {persona.nombre} (ID={persona.id})")
         return persona
