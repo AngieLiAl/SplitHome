@@ -1,8 +1,15 @@
+# ──────────────────────────────────────────────────────────────
+# DAO — PersonaDAO
+# Se encarga de todo lo relacionado con guardar, buscar,
+# actualizar y eliminar personas en PostgreSQL.
+# Antes usaba una lista en memoria, ahora usa la base de datos
+# real para que los datos no se pierdan al cerrar el programa.
+# ──────────────────────────────────────────────────────────────
+import psycopg2
 from config.logger import Logger
 from config.base_datos import obtener_conexion
 from modelos.persona import Persona
 from datetime import date
-import sqlite3
 
 class PersonaNoEncontradaError(Exception):
     def __init__(self, persona_id):
