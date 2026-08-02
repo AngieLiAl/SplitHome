@@ -130,18 +130,21 @@ class GastoDAO:
         return True
     
     def calcular_total(self):
+        # Suma todos los montos de gastos registrados
         conn = obtener_conexion()
         cursor = conn.cursor()
-        cursor.execute("SELECT SUM(monto) FROM gastos")
-        resultado = cursor.fetchone()[0]
+        cursor.execute("SELECT SUM(monto) FROM gasto")
+        resultado = cursor.fetchone()["total"]
         conn.close()
+        # Si no hay gastos devuelve 0 en vez de None
         return resultado or 0.0
     
     def total(self):
+        # Devuelve cuántos gastos hay registrados
         conn = obtener_conexion()
         cursor = conn.cursor()
-        cursor.execute("SELECT COUNT(*) FROM gastos")
-        total = cursor.fetchone()[0]
+        cursor.execute("SELECT COUNT(*) AS total FROM gasto")
+        total = cursor.fetchone()["total"]
         conn.close()
         return total
     
