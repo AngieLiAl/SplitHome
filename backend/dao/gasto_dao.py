@@ -46,14 +46,16 @@ class GastoDAO:
         return gasto
 
     def buscar_por_id(self, gasto_id):
+        # Busca un gasto por su id, devuelve None si no existe
         conn = obtener_conexion()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM gastos WHERE id = ?", (gasto_id,))
+        cursor.execute("SELECT * FROM gastos WHERE id = %s", (gasto_id,))
         fila = cursor.fetchone()
         conn.close()
         return self.__fila_a_gasto(fila) if fila else None
     
     def obtener_todos(self):
+        # Devuelve todos los gastos ordenados del más reciente al más antiguo
         conn = obtener_conexion()
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM gastos ORDER BY fecha DESC")
