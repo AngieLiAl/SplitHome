@@ -67,9 +67,10 @@ class PersonaDAO:
         return self.__fila_a_persona(fila) if fila else None
 
     def obtener_todos(self):
+        # Devuelve todas las personas ordenadas por nombre
         conn = obtener_conexion()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM personas ORDER BY nombre")
+        cursor.execute("SELECT * FROM persona ORDER BY nombre")
         filas = cursor.fetchall()
         conn.close()
         return [self.__fila_a_persona(f) for f in filas]
