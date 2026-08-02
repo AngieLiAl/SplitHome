@@ -11,29 +11,37 @@ from config.base_datos import obtener_conexion
 from modelos.persona import Persona
 from datetime import date
 
+# Error personalizado cuando no se encuentra una persona
 class PersonaNoEncontradaError(Exception):
     def __init__(self, persona_id):
         super().__init__(f"Persona ID={persona_id} no encontrada")
 
+# Error personalizado cuando el email ya está registrado
 class EmailDuplicadoError(Exception):
     def __init__(self, email):
         super().__init__(f"Email '{email}' ya registrado")
 
 class PersonaDAO:
     def __init__(self):
+        # Usamos el mismo historial de eventos que todo el sistema
         self.__log = Logger()
 
     def insertar(self, persona):
+        # Verificamos que el email no esté registrado antes de guardar
         if self.buscar_por_email(persona.email):
             self.__log.warning(f"Email duplicado: {persona.email}")
             raise EmailDuplicadoError(persona.email)
+        # Asignamos la fecha de hoy si no viene una
         persona.fecha_registro = str(date.today())
         conn = obtener_conexion()
         cursor = conn.cursor()
+        # RETURNING id_persona le dice a PostgreSQL que nos devuelva
+        # el id que generó automáticamente al insertar
         cursor.execute(
-            "INSERT INTO personas (nombre, email, fecha_registro) VALUES (?, ?, ?)",
+            """INSERT INTO personas (nombre, email, fecha_registro) (%s, %s, %s) RETURNING id_persona""",
             (persona.nombre, persona.email, persona.fecha_registro)
         )
+        
         conn.commit()
         persona.id = cursor.lastrowid
         conn.close()
