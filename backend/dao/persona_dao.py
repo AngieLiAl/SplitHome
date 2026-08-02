@@ -49,17 +49,19 @@ class PersonaDAO:
         return persona
 
     def buscar_por_email(self, email):
+        # Busca una persona por su email, devuelve None si no existe
         conn = obtener_conexion()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM personas WHERE email = ?", (email,))
+        cursor.execute("SELECT * FROM persona WHERE email =  %s", (email,))
         fila = cursor.fetchone()
         conn.close()
         return self.__fila_a_persona(fila) if fila else None
 
     def buscar_por_id(self, persona_id):
+        # Busca una persona por su id, devuelve None si no existe
         conn = obtener_conexion()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM personas WHERE id = ?", (persona_id,))
+        cursor.execute("SELECT * FROM persona WHERE id_persona = %s", (persona_id,))
         fila = cursor.fetchone()
         conn.close()
         return self.__fila_a_persona(fila) if fila else None
