@@ -44,21 +44,21 @@ class CategoriaDAO:
         conn.close()
         self.__log.info(f"Categoría agregada: {categoria.nombre} (ID={categoria.id})")
         return categoria
-
     
     def buscar_por_nombre(self, nombre):
+        # Busca una categoría por su nombre, devuelve None si no existe
         conn = obtener_conexion()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM categorias WHERE nombre = ?", (nombre,))
+        cursor.execute("SELECT * FROM categorias WHERE nombre = %s", (nombre,))
         fila = cursor.fetchone()
         conn.close()
         return self.__fila_a_categoria(fila) if fila else None
-
-
+    
     def buscar_por_id(self, categoria_id):
+        # Busca una categoría por su id, devuelve None si no existe
         conn = obtener_conexion()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM categorias WHERE id = ?", (categoria_id,))
+        cursor.execute("SELECT * FROM categorias WHERE id = %s", (categoria_id,))
         fila = cursor.fetchone()
         conn.close()
         return self.__fila_a_categoria(fila) if fila else None
