@@ -149,6 +149,7 @@ class GastoDAO:
         return total
     
     def __fila_a_gasto(self, fila):
+        # Convierte una fila de PostgreSQL en un objeto Gasto
         g = Gasto(
             fila["descripcion"],
             fila["monto"],
@@ -157,5 +158,5 @@ class GastoDAO:
             fila["fecha"],
             bool(fila["es_compartido"])
         )
-        g.id = fila["id"]
+        g.id = fila["id_gasto"]
         return g
