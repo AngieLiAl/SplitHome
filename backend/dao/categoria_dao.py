@@ -1,8 +1,14 @@
+# ──────────────────────────────────────────────────────────────
+# DAO — CategoriaDAO
+# Se encarga de todo lo relacionado con guardar, buscar,
+# actualizar y eliminar categorías en PostgreSQL.
+# Antes usaba una lista en memoria, ahora usa la base de datos
+# real para que los datos no se pierdan al cerrar el programa.
+# ──────────────────────────────────────────────────────────────
+import psycopg2
 from config.logger import Logger
 from config.base_datos import obtener_conexion
 from modelos.categoria import Categoria
-import sqlite3
-
 
 class CategoriaNoEncontradaError(Exception):
     def __init__(self, categoria_id):
