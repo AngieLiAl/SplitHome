@@ -76,11 +76,14 @@ class ParticipacionDAO:
         return [dict(f) for f in filas]
     
     def eliminar_por_gasto(self, id_gasto):
-        """Elimina todas las participaciones de un gasto."""
+        # Elimina todas las participaciones de un gasto
+        # Esto se usa antes de eliminar el gasto manualmente
+        # aunque PostgreSQL también lo hace automáticamente
+        # gracias al ON DELETE CASCADE
         conn = obtener_conexion()
         cursor = conn.cursor()
         cursor.execute(
-            "DELETE FROM participacion WHERE id_gasto = ?",
+            "DELETE FROM participacion WHERE id_gasto = %s",
             (id_gasto,)
         )
         conn.commit()
