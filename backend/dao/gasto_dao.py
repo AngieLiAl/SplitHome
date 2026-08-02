@@ -90,6 +90,8 @@ class GastoDAO:
     
     def actualizar(self, gasto_id, descripcion=None, monto=None,
                 fecha=None, id_categoria=None):
+        # Solo actualiza los campos que se envíen
+        # si no se manda un campo, se queda como estaba
         g = self.buscar_por_id(gasto_id)
         if not g:
             self.__log.error(f"Actualizar fallido: Gasto ID={gasto_id} no existe")
@@ -102,8 +104,8 @@ class GastoDAO:
         cursor = conn.cursor()
         cursor.execute(
             """UPDATE gastos
-            SET descripcion = ?, monto = ?, fecha = ?, id_categoria = ?
-            WHERE id = ?""",
+            SET descripcion = %s, monto = %s, fecha = %s, id_categoria = %s
+            WHERE id_gasto = %s""",
             (nueva_desc, nuevo_monto, nueva_fecha, nueva_cat, gasto_id)
         )
         conn.commit()
