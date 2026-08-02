@@ -35,7 +35,7 @@ class CategoriaDAO:
         # RETURNING id_categoria le dice a PostgreSQL que nos devuelva
         # el id que generó automáticamente al insertar
         cursor.execute(
-            """INSERT INTO categorias (nombre, icono, descripcion) VALUES (%s, %s, %s) RETURNING id_categoria""",
+            """INSERT INTO categoria (nombre, icono, descripcion) VALUES (%s, %s, %s) RETURNING id_categoria""",
             (categoria.nombre, categoria.icono, categoria.descripcion)
         )
         # Guardamos el id que PostgreSQL generó en el objeto categoria
@@ -49,7 +49,7 @@ class CategoriaDAO:
         # Busca una categoría por su nombre, devuelve None si no existe
         conn = obtener_conexion()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM categorias WHERE nombre = %s", (nombre,))
+        cursor.execute("SELECT * FROM categoria WHERE nombre = %s", (nombre,))
         fila = cursor.fetchone()
         conn.close()
         return self.__fila_a_categoria(fila) if fila else None
@@ -58,7 +58,7 @@ class CategoriaDAO:
         # Busca una categoría por su id, devuelve None si no existe
         conn = obtener_conexion()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM categorias WHERE id = %s", (categoria_id,))
+        cursor.execute("SELECT * FROM categoria WHERE id_categoria = %s", (categoria_id,))
         fila = cursor.fetchone()
         conn.close()
         return self.__fila_a_categoria(fila) if fila else None
@@ -102,7 +102,7 @@ class CategoriaDAO:
         conn = obtener_conexion()
         cursor = conn.cursor()
         try:
-            cursor.execute("DELETE FROM categoria WHERE id = %s", (categoria_id,))
+            cursor.execute("DELETE FROM categoria WHERE id_categoria = %s", (categoria_id,))
             conn.commit()
         except psycopg2.IntegrityError:
             conn.close()
@@ -124,5 +124,5 @@ class CategoriaDAO:
     def __fila_a_categoria(self, fila):
         # Convierte una fila de PostgreSQL en un objeto Categoria
         c = Categoria(fila["nombre"], fila["icono"], fila["descripcion"])
-        c.id = fila["id"]
+        c.id = fila["id_categoria"]
         return c
