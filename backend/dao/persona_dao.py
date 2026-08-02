@@ -116,14 +116,16 @@ class PersonaDAO:
         return True
 
     def total(self):
+        # Devuelve cuántas personas hay registradas
         conn = obtener_conexion()
         cursor = conn.cursor()
-        cursor.execute("SELECT COUNT(*) FROM personas")
-        total = cursor.fetchone()[0]
+        cursor.execute("SELECT COUNT(*) AS total FROM persona")
+        total = cursor.fetchone()["total"]
         conn.close()
         return total
 
     def __fila_a_persona(self, fila):
+        # Convierte una fila de PostgreSQL en un objeto Persona
         p = Persona(fila["nombre"], fila["email"], fila["fecha_registro"])
         p.id = fila["id"]
         return p
