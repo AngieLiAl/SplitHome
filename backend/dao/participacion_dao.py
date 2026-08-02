@@ -48,7 +48,7 @@ class ParticipacionDAO:
             """SELECT p.id_gasto, p.id_persona, pe.nombre, 
                     p.proporcion, p.monto_asignado
             FROM participacion p
-            JOIN personas pe ON p.id_persona = pe.id
+            JOIN persona pe ON p.id_persona = pe.id_persona
             WHERE p.id_gasto = %s""",
             (id_gasto,)
         )
@@ -66,7 +66,7 @@ class ParticipacionDAO:
             """SELECT p.id_gasto, g.descripcion, g.monto,
                     p.proporcion, p.monto_asignado
             FROM participacion p
-            JOIN gastos g ON p.id_gasto = g.id
+            JOIN gasto g ON p.id_gasto = g.id_gasto
             WHERE p.id_persona = %s
             ORDER BY g.fecha DESC""",
             (id_persona,)
@@ -98,7 +98,7 @@ class ParticipacionDAO:
         balance = {}
         for pid in persona_ids:
             cursor.execute(
-                """SELECT SUM(monto_asignado) FROM participacion WHERE id_persona = %s""",
+                """SELECT SUM(monto_asignado) AS total FROM participacion WHERE id_persona = %s""",
                 (pid,)
             )
             resultado = cursor.fetchone()["total"]
