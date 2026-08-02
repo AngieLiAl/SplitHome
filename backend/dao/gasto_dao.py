@@ -58,17 +58,31 @@ class GastoDAO:
         # Devuelve todos los gastos ordenados del más reciente al más antiguo
         conn = obtener_conexion()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM gastos ORDER BY fecha DESC")
+        cursor.execute("SELECT * FROM gasto ORDER BY fecha DESC")
         filas = cursor.fetchall()
         conn.close()
         return [self.__fila_a_gasto(f) for f in filas]
         
     def obtener_por_persona(self, persona_id):
+        # Devuelve todos los gastos que pagó una persona específica
         conn = obtener_conexion()
         cursor = conn.cursor()
         cursor.execute(
-            "SELECT * FROM gastos WHERE id_persona = ? ORDER BY fecha DESC",
+            """SELECT * FROM gasto WHERE id_persona = %s ORDER BY fecha DESC""",
             (persona_id,)
+        )
+        filas = cursor.fetchall()
+        conn.close()
+        return [self.__fila_a_gasto(f) for f in filas]
+    
+    def obtener_por_categoria(self, categoria_id):
+        # Devuelve todos los gastos de una categoría específica
+        conn = obtener_conexion()
+        cursor = conn.cursor()
+        cursor.execute(
+            """SELECT * FROM gasto WHERE id_categoria = %s
+            ORDER BY fecha DESC""",
+            (categoria_id,)
         )
         filas = cursor.fetchall()
         conn.close()
