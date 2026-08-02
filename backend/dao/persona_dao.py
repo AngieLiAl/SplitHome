@@ -1,63 +1,83 @@
+# ──────────────────────────────────────────────────────────────
+# DAO — PersonaDAO
+# Se encarga de todo lo relacionado con guardar, buscar,
+# actualizar y eliminar personas en PostgreSQL.
+# Antes usaba una lista en memoria, ahora usa la base de datos
+# real para que los datos no se pierdan al cerrar el programa.
+# ──────────────────────────────────────────────────────────────
+import psycopg2
 from config.logger import Logger
 from config.base_datos import obtener_conexion
 from modelos.persona import Persona
 from datetime import date
-import sqlite3
 
+# Error personalizado cuando no se encuentra una persona
 class PersonaNoEncontradaError(Exception):
     def __init__(self, persona_id):
         super().__init__(f"Persona ID={persona_id} no encontrada")
 
+# Error personalizado cuando el email ya está registrado
 class EmailDuplicadoError(Exception):
     def __init__(self, email):
         super().__init__(f"Email '{email}' ya registrado")
 
 class PersonaDAO:
     def __init__(self):
+        # Usamos el mismo historial de eventos que todo el sistema
         self.__log = Logger()
 
     def insertar(self, persona):
+        # Verificamos que el email no esté registrado antes de guardar
         if self.buscar_por_email(persona.email):
             self.__log.warning(f"Email duplicado: {persona.email}")
             raise EmailDuplicadoError(persona.email)
+        # Asignamos la fecha de hoy si no viene una
         persona.fecha_registro = str(date.today())
         conn = obtener_conexion()
         cursor = conn.cursor()
+        # RETURNING id_persona le dice a PostgreSQL que nos devuelva
+        # el id que generó automáticamente al insertar
         cursor.execute(
-            "INSERT INTO personas (nombre, email, fecha_registro) VALUES (?, ?, ?)",
+            """INSERT INTO personas (nombre, email, fecha_registro) (%s, %s, %s) RETURNING id_persona""",
             (persona.nombre, persona.email, persona.fecha_registro)
         )
+        # Guardamos el id que PostgreSQL generó en el objeto persona
+        persona.id = cursor.fetchone()["id_persona"]
         conn.commit()
-        persona.id = cursor.lastrowid
         conn.close()
         self.__log.info(f"Persona agregada: {persona.nombre} (ID={persona.id})")
         return persona
 
     def buscar_por_email(self, email):
+        # Busca una persona por su email, devuelve None si no existe
         conn = obtener_conexion()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM personas WHERE email = ?", (email,))
+        cursor.execute("SELECT * FROM persona WHERE email =  %s", (email,))
         fila = cursor.fetchone()
         conn.close()
         return self.__fila_a_persona(fila) if fila else None
 
     def buscar_por_id(self, persona_id):
+        # Busca una persona por su id, devuelve None si no existe
         conn = obtener_conexion()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM personas WHERE id = ?", (persona_id,))
+        cursor.execute("SELECT * FROM persona WHERE id_persona = %s", (persona_id,))
         fila = cursor.fetchone()
         conn.close()
         return self.__fila_a_persona(fila) if fila else None
 
     def obtener_todos(self):
+        # Devuelve todas las personas ordenadas por nombre
         conn = obtener_conexion()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM personas ORDER BY nombre")
+        cursor.execute("SELECT * FROM persona ORDER BY nombre")
         filas = cursor.fetchall()
         conn.close()
         return [self.__fila_a_persona(f) for f in filas]
 
     def actualizar(self, persona_id, nombre=None, email=None):
+        # Solo actualiza los campos que se envíen
+        # si no se manda un campo, se queda como estaba
         p = self.buscar_por_id(persona_id)
         if not p:
             self.__log.error(f"Actualizar fallido: Persona ID={persona_id} no existe")
@@ -67,7 +87,7 @@ class PersonaDAO:
         conn = obtener_conexion()
         cursor = conn.cursor()
         cursor.execute(
-            "UPDATE personas SET nombre = ?, email = ? WHERE id = ?",
+            "UPDATE persona SET nombre = %s, email = %s WHERE id_persona = %s",
             (nuevo_nombre, nuevo_email, persona_id)
         )
         conn.commit()
@@ -76,6 +96,8 @@ class PersonaDAO:
         return p
 
     def eliminar(self, persona_id):
+        # Elimina una persona, pero si tiene gastos asociados
+        # PostgreSQL lanza un error de integridad que capturamos
         p = self.buscar_por_id(persona_id)
         if not p:
             self.__log.error(f"Eliminar fallido: Persona ID={persona_id} no existe")
@@ -83,9 +105,9 @@ class PersonaDAO:
         conn = obtener_conexion()
         cursor = conn.cursor()
         try:
-            cursor.execute("DELETE FROM personas WHERE id = ?", (persona_id,))
+            cursor.execute("DELETE FROM persona WHERE id_persona = %s", (persona_id,))
             conn.commit()
-        except sqlite3.IntegrityError:
+        except psycopg2.IntegrityError:
             conn.close()
             self.__log.warning(f"Persona ID={persona_id} tiene gastos asociados")
             raise
@@ -94,14 +116,16 @@ class PersonaDAO:
         return True
 
     def total(self):
+        # Devuelve cuántas personas hay registradas
         conn = obtener_conexion()
         cursor = conn.cursor()
-        cursor.execute("SELECT COUNT(*) FROM personas")
-        total = cursor.fetchone()[0]
+        cursor.execute("SELECT COUNT(*) AS total FROM persona")
+        total = cursor.fetchone()["total"]
         conn.close()
         return total
 
     def __fila_a_persona(self, fila):
+        # Convierte una fila de PostgreSQL en un objeto Persona
         p = Persona(fila["nombre"], fila["email"], fila["fecha_registro"])
         p.id = fila["id"]
         return p
