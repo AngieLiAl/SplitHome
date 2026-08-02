@@ -112,16 +112,17 @@ class CategoriaDAO:
         self.__log.info(f"Categoría eliminada: {c.nombre} (ID={categoria_id})")
         return True
 
-
     def total(self):
+        # Devuelve cuántas categorías hay registradas
         conn = obtener_conexion()
         cursor = conn.cursor()
-        cursor.execute("SELECT COUNT(*) FROM categorias")
-        total = cursor.fetchone()[0]
+        cursor.execute("SELECT COUNT(*) AS total FROM categoria")
+        total = cursor.fetchone()["total"]
         conn.close()
         return total
     
     def __fila_a_categoria(self, fila):
+        # Convierte una fila de PostgreSQL en un objeto Categoria
         c = Categoria(fila["nombre"], fila["icono"], fila["descripcion"])
         c.id = fila["id"]
         return c
