@@ -1,14 +1,23 @@
+# ──────────────────────────────────────────────────────────────
+# DAO — GastoDAO
+# Se encarga de todo lo relacionado con guardar, buscar,
+# actualizar y eliminar gastos en PostgreSQL.
+# Antes usaba una lista en memoria, ahora usa la base de datos
+# real para que los datos no se pierdan al cerrar el programa.
+# ──────────────────────────────────────────────────────────────
+import psycopg2
 from config.logger import Logger
 from config.base_datos import obtener_conexion
 from modelos.gasto import Gasto
-import sqlite3
 
+# Error personalizado cuando no se encuentra un gasto
 class GastoNoEncontradoError(Exception):
     def __init__(self, gasto_id):
         super().__init__(f"Gasto ID={gasto_id} no encontrado")
 
 class GastoDAO:
     def __init__(self):
+        # Usamos el mismo historial de eventos que todo el sistema
         self.__log = Logger()
 
     def insertar(self, gasto):
