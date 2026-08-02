@@ -26,17 +26,21 @@ class CategoriaDAO:
         self.__log = Logger()
 
     def insertar(self, categoria):
+        # Verificamos que no exista una categoría con el mismo nombre
         if self.buscar_por_nombre(categoria.nombre):
             self.__log.warning(f"Categoría duplicada: {categoria.nombre}")
             raise CategoriaDuplicadaError(categoria.nombre)
         conn = obtener_conexion()
         cursor = conn.cursor()
+        # RETURNING id_categoria le dice a PostgreSQL que nos devuelva
+        # el id que generó automáticamente al insertar
         cursor.execute(
-            "INSERT INTO categorias (nombre, icono, descripcion) VALUES (?, ?, ?)",
+            """INSERT INTO categorias (nombre, icono, descripcion) VALUES (%s, %s, %s) RETURNING id_categoria""",
             (categoria.nombre, categoria.icono, categoria.descripcion)
         )
+        # Guardamos el id que PostgreSQL generó en el objeto categoria
+        categoria.id = cursor.fetchone()["id_categoria"]
         conn.commit()
-        categoria.id = cursor.lastrowid
         conn.close()
         self.__log.info(f"Categoría agregada: {categoria.nombre} (ID={categoria.id})")
         return categoria
