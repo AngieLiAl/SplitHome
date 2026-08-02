@@ -21,20 +21,28 @@ class GastoDAO:
         self.__log = Logger()
 
     def insertar(self, gasto):
+        # Guardamos el gasto en PostgreSQL
+        # es_compartido se guarda como True/False en PostgreSQL
         conn = obtener_conexion()
         cursor = conn.cursor()
+        # RETURNING id_gasto le dice a PostgreSQL que nos devuelva
+        # el id que generó automáticamente al insertar
         cursor.execute(
             """INSERT INTO gastos
             (descripcion, monto, fecha, es_compartido, id_persona, id_categoria)
-            VALUES (?, ?, ?, ?, ?, ?)""",
+            VALUES (%s, %s, %s, %s, %s, %s) RETURNING id_gasto""",
             (gasto.descripcion, gasto.monto, gasto.fecha,
-            1 if gasto.es_compartido else 0,
+            gasto.es_compartido,
             gasto.id_persona, gasto.id_categoria)
         )
+        # Guardamos el id que PostgreSQL generó en el objeto gasto
+        gasto.id = cursor.fetchone()["id_gasto"]
         conn.commit()
-        gasto.id = cursor.lastrowid
         conn.close()
-        self.__log.info(f"Gasto agregado: {gasto.descripcion} S/.{gasto.monto:.2f} (ID={gasto.id})")
+        self.__log.info(
+            f"Gasto agregado: {gasto.descripcion} "
+            f"S/.{gasto.monto:.2f} (ID={gasto.id})"
+            )
         return gasto
 
     def buscar_por_id(self, gasto_id):
