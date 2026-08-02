@@ -21,24 +21,27 @@ class ParticipacionDAO:
         self.__log = Logger()
 
     def insertar(self, id_gasto, id_persona, proporcion, monto_asignado):
-        """Registra que una persona participa en un gasto compartido."""
+        # Registra que una persona participa en un gasto compartido
+        # y cuánto le corresponde pagar según la proporción acordada
         conn = obtener_conexion()
         cursor = conn.cursor()
         cursor.execute(
             """INSERT INTO participacion
             (id_gasto, id_persona, proporcion, monto_asignado)
-            VALUES (?, ?, ?, ?)""",
+            VALUES (%s, %s, %s, %s)""",
             (id_gasto, id_persona, proporcion, monto_asignado)
         )
         conn.commit()
         conn.close()
         self.__log.info(
             f"Participacion registrada: Gasto ID={id_gasto} "
-            f"Persona ID={id_persona} S/. {monto_asignado:.2f}"
+            f"Persona ID={id_persona} "
+            f"S/. {monto_asignado:.2f}"
         )
         
     def buscar_por_gasto(self, id_gasto):
-        """Devuelve todas las participaciones de un gasto compartido."""
+        # Devuelve todas las personas que participan en un gasto
+        # junto con su proporción y monto asignado
         conn = obtener_conexion()
         cursor = conn.cursor()
         cursor.execute(
@@ -46,12 +49,13 @@ class ParticipacionDAO:
                     p.proporcion, p.monto_asignado
             FROM participacion p
             JOIN personas pe ON p.id_persona = pe.id
-            WHERE p.id_gasto = ?""",
+            WHERE p.id_gasto = %s""",
             (id_gasto,)
         )
         filas = cursor.fetchall()
         conn.close()
-        return filas
+        # Convertimos cada fila a diccionario para poder usarla fácilmente
+        return [dict(f) for f in filas]
     
     def buscar_por_persona(self, id_persona):
         """Devuelve todos los gastos en los que participa una persona."""
