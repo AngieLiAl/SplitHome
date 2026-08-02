@@ -58,7 +58,8 @@ class ParticipacionDAO:
         return [dict(f) for f in filas]
     
     def buscar_por_persona(self, id_persona):
-        """Devuelve todos los gastos en los que participa una persona."""
+        # Devuelve todos los gastos compartidos en los que
+        # participa una persona específica
         conn = obtener_conexion()
         cursor = conn.cursor()
         cursor.execute(
@@ -66,13 +67,13 @@ class ParticipacionDAO:
                     p.proporcion, p.monto_asignado
             FROM participacion p
             JOIN gastos g ON p.id_gasto = g.id
-            WHERE p.id_persona = ?
+            WHERE p.id_persona = %s
             ORDER BY g.fecha DESC""",
             (id_persona,)
         )
         filas = cursor.fetchall()
         conn.close()
-        return filas
+        return [dict(f) for f in filas]
     
     def eliminar_por_gasto(self, id_gasto):
         """Elimina todas las participaciones de un gasto."""
