@@ -114,13 +114,16 @@ class GastoDAO:
         return g
     
     def eliminar(self, gasto_id):
+        # Elimina un gasto de la base de datos
+        # PostgreSQL elimina automáticamente las participaciones
+        # asociadas gracias al ON DELETE CASCADE que definimos
         g = self.buscar_por_id(gasto_id)
         if not g:
             self.__log.error(f"Eliminar fallido: Gasto ID={gasto_id} no existe")
             raise GastoNoEncontradoError(gasto_id)
         conn = obtener_conexion()
         cursor = conn.cursor()
-        cursor.execute("DELETE FROM gastos WHERE id = ?", (gasto_id,))
+        cursor.execute("DELETE FROM gasto WHERE id_gasto = %s", (gasto_id,))
         conn.commit()
         conn.close()
         self.__log.info(f"Gasto eliminado: {g.descripcion} (ID={gasto_id})")
