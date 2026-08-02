@@ -62,18 +62,19 @@ class CategoriaDAO:
         fila = cursor.fetchone()
         conn.close()
         return self.__fila_a_categoria(fila) if fila else None
-
     
     def obtener_todos(self):
+        # Devuelve todas las categorías ordenadas por nombre
         conn = obtener_conexion()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM categorias ORDER BY nombre")
+        cursor.execute("SELECT * FROM categoria ORDER BY nombre")
         filas = cursor.fetchall()
         conn.close()
         return [self.__fila_a_categoria(f) for f in filas]
 
-
     def actualizar(self, categoria_id, nombre=None, icono=None):
+        # Solo actualiza los campos que se envíen
+        # si no se manda un campo, se queda como estaba
         c = self.buscar_por_id(categoria_id)
         if not c:
             self.__log.error(f"Actualizar fallido: Categoría ID={categoria_id} no existe")
@@ -83,14 +84,13 @@ class CategoriaDAO:
         conn = obtener_conexion()
         cursor = conn.cursor()
         cursor.execute(
-            "UPDATE categorias SET nombre = ?, icono = ? WHERE id = ?",
+            "UPDATE categoria SET nombre = %s, icono = %s WHERE id_categoria = %s",
             (nuevo_nombre, nuevo_icono, categoria_id)
         )
         conn.commit()
         conn.close()
         self.__log.info(f"Categoría actualizada: ID={categoria_id}")
         return c
-
 
     def eliminar(self, categoria_id):
         c = self.buscar_por_id(categoria_id)
