@@ -76,6 +76,8 @@ class PersonaDAO:
         return [self.__fila_a_persona(f) for f in filas]
 
     def actualizar(self, persona_id, nombre=None, email=None):
+        # Solo actualiza los campos que se envíen
+        # si no se manda un campo, se queda como estaba
         p = self.buscar_por_id(persona_id)
         if not p:
             self.__log.error(f"Actualizar fallido: Persona ID={persona_id} no existe")
@@ -85,7 +87,7 @@ class PersonaDAO:
         conn = obtener_conexion()
         cursor = conn.cursor()
         cursor.execute(
-            "UPDATE personas SET nombre = ?, email = ? WHERE id = ?",
+            "UPDATE persona SET nombre = %s, email = %s WHERE id_persona = %s",
             (nuevo_nombre, nuevo_email, persona_id)
         )
         conn.commit()
