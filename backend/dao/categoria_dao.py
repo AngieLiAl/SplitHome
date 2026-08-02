@@ -93,6 +93,8 @@ class CategoriaDAO:
         return c
 
     def eliminar(self, categoria_id):
+        # Elimina una categoría, pero si tiene gastos asociados
+        # PostgreSQL lanza un error de integridad que capturamos
         c = self.buscar_por_id(categoria_id)
         if not c:
             self.__log.error(f"Eliminar fallido: Categoría ID={categoria_id} no existe")
@@ -100,9 +102,9 @@ class CategoriaDAO:
         conn = obtener_conexion()
         cursor = conn.cursor()
         try:
-            cursor.execute("DELETE FROM categorias WHERE id = ?", (categoria_id,))
+            cursor.execute("DELETE FROM categoria WHERE id = %s", (categoria_id,))
             conn.commit()
-        except sqlite3.IntegrityError:
+        except psycopg2.IntegrityError:
             conn.close()
             self.__log.warning(f"Categoría ID={categoria_id} tiene gastos asociados")
             raise
