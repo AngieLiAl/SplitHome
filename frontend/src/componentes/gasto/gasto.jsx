@@ -128,6 +128,30 @@ function Gasto() {
         }
     }
 
+    // Busca el nombre de la categoría por su id
+    function getNombreCategoria(id) {
+        const c = categorias.find(c => c.id_categoria === id)
+        return c ? c.icono + " " + c.nombre : "—"
+    }
+
+    // Busca el nombre de la persona por su id
+    function getNombrePersona(id) {
+        const p = personas.find(p => p.id_persona === id)
+        return p ? p.nombre : "—"
+    }
+
+    // Aplica los filtros de búsqueda, categoría y persona
+    const gastosFiltrados = gastos.filter(g => {
+        const coincideTexto    = g.descripcion.toLowerCase().includes(busqueda.toLowerCase())
+        const coincideCategoria = filtroCat     ? g.id_categoria === Number(filtroCat)    : true
+        const coincidePersona   = filtroPersona ? g.id_persona   === Number(filtroPersona) : true
+        return coincideTexto && coincideCategoria && coincidePersona
+    })
+
+    // Total de todos los gastos
+    const totalGastado = gastos.reduce((acc, g) => acc + Number(g.monto), 0)
+
+
 // ── Helpers ──────────────────────────────────────────────
 function getNombreCategoria(id) {
     const c = categorias.find(c => c.id === id)
