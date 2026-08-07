@@ -28,7 +28,7 @@ class GastoDAO:
         # RETURNING id_gasto le dice a PostgreSQL que nos devuelva
         # el id que generó automáticamente al insertar
         cursor.execute(
-            """INSERT INTO gastos
+            """INSERT INTO gasto
             (descripcion, monto, fecha, es_compartido, id_persona, id_categoria)
             VALUES (%s, %s, %s, %s, %s, %s) RETURNING id_gasto""",
             (gasto.descripcion, gasto.monto, gasto.fecha,
@@ -49,7 +49,7 @@ class GastoDAO:
         # Busca un gasto por su id, devuelve None si no existe
         conn = obtener_conexion()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM gastos WHERE id = %s", (gasto_id,))
+        cursor.execute("SELECT * FROM gasto WHERE id_gasto = %s", (gasto_id,))
         fila = cursor.fetchone()
         conn.close()
         return self.__fila_a_gasto(fila) if fila else None
@@ -103,7 +103,7 @@ class GastoDAO:
         conn = obtener_conexion()
         cursor = conn.cursor()
         cursor.execute(
-            """UPDATE gastos
+            """UPDATE gasto
             SET descripcion = %s, monto = %s, fecha = %s, id_categoria = %s
             WHERE id_gasto = %s""",
             (nueva_desc, nuevo_monto, nueva_fecha, nueva_cat, gasto_id)
@@ -133,7 +133,7 @@ class GastoDAO:
         # Suma todos los montos de gastos registrados
         conn = obtener_conexion()
         cursor = conn.cursor()
-        cursor.execute("SELECT SUM(monto) FROM gasto")
+        cursor.execute("SELECT SUM(monto) AS total FROM gasto")
         resultado = cursor.fetchone()["total"]
         conn.close()
         # Si no hay gastos devuelve 0 en vez de None

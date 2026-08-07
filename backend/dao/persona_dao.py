@@ -38,7 +38,7 @@ class PersonaDAO:
         # RETURNING id_persona le dice a PostgreSQL que nos devuelva
         # el id que generó automáticamente al insertar
         cursor.execute(
-            """INSERT INTO personas (nombre, email, fecha_registro) (%s, %s, %s) RETURNING id_persona""",
+            """INSERT INTO persona (nombre, email, fecha_registro) VALUES (%s, %s, %s) RETURNING id_persona""",
             (persona.nombre, persona.email, persona.fecha_registro)
         )
         # Guardamos el id que PostgreSQL generó en el objeto persona
@@ -52,7 +52,7 @@ class PersonaDAO:
         # Busca una persona por su email, devuelve None si no existe
         conn = obtener_conexion()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM persona WHERE email =  %s", (email,))
+        cursor.execute("SELECT * FROM persona WHERE email = %s", (email,))
         fila = cursor.fetchone()
         conn.close()
         return self.__fila_a_persona(fila) if fila else None
@@ -127,5 +127,5 @@ class PersonaDAO:
     def __fila_a_persona(self, fila):
         # Convierte una fila de PostgreSQL en un objeto Persona
         p = Persona(fila["nombre"], fila["email"], fila["fecha_registro"])
-        p.id = fila["id"]
+        p.id = fila["id_persona"]
         return p
