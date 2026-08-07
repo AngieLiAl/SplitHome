@@ -75,54 +75,69 @@ function Balance() {
             </div>
 
             {/* Tarjetas de balance por persona */}
-            <div className="row mb-4">
+            <div className="row g-3 mb-4">
                 {personas.map((p) => {
-                    const pagado = calcularPagado(p.id)
-                    const diff   = calcularDiff(p.id)
+                    const pagado = cuantoPago(p.id_persona)
+                    const diff   = calcularDiff(p.id_persona)
 
                     return (
-                        <div className="col-md-6 mb-3" key={p.id}>
+                        <div className="col-12 col-md-6" key={p.id_persona}>
                             <div className="balance-card">
 
-                                {/* Avatar */}
+                                {/* Avatar con iniciales */}
                                 <div className="balance-avatar">
                                     {iniciales(p.nombre)}
                                 </div>
 
-                                {/* Info */}
+                                {/* Info de la persona */}
                                 <div className="flex-grow-1">
-                                    <div className="fw-semibold">{p.nombre}</div>
-                                    <div className="text-muted" style={{ fontSize: "0.78rem" }}>
+                                    <div className="fw-semibold mb-1">{p.nombre}</div>
+                                    <div className="text-muted mb-1"
+                                        style={{ fontSize: "0.8rem" }}>
                                         {p.email}
                                     </div>
-                                    <div className="mt-1" style={{ fontSize: "0.82rem" }}>
+                                    <div style={{ fontSize: "0.84rem" }}>
                                         Pagó: <strong>S/. {pagado.toFixed(2)}</strong>
                                     </div>
-                                    <div style={{ fontSize: "0.8rem" }}>
-                                        Le corresponde: <strong>S/. {promedio.toFixed(2)}</strong>
+                                    <div style={{ fontSize: "0.82rem" }}>
+                                        Le toca: <strong>S/. {promedio.toFixed(2)}</strong>
                                     </div>
+                                    {/* Estado del balance */}
                                     <div className="mt-1">
-                                        {diff > 0 ? (
-                                            <span className="text-recibe fw-semibold">
+                                        {diff > 0.01 ? (
+                                            <span style={{
+                                                color: "var(--accent2)",
+                                                fontSize: "0.82rem",
+                                                fontWeight: 600
+                                            }}>
                                                 ✅ Le deben S/. {diff.toFixed(2)}
                                             </span>
-                                        ) : diff < 0 ? (
-                                            <span className="text-debe fw-semibold">
+                                        ) : diff < -0.01 ? (
+                                            <span style={{
+                                                color: "var(--danger)",
+                                                fontSize: "0.82rem",
+                                                fontWeight: 600
+                                            }}>
                                                 ⚠️ Debe S/. {Math.abs(diff).toFixed(2)}
                                             </span>
                                         ) : (
-                                            <span className="text-muted fw-semibold">
+                                            <span style={{
+                                                color: "var(--muted)",
+                                                fontSize: "0.82rem",
+                                                fontWeight: 600
+                                            }}>
                                                 ✓ Al día
                                             </span>
                                         )}
                                     </div>
                                 </div>
 
-                                {/* Monto destacado */}
+                                {/* Monto destacado a la derecha */}
                                 <div style={{
                                     fontFamily: "Playfair Display, serif",
                                     fontSize: "1.3rem",
-                                    color: diff >= 0 ? "var(--accent2)" : "var(--danger)"
+                                    color: diff >= 0 ? "var(--accent2)" : "var(--danger)",
+                                    whiteSpace: "nowrap"
                                 }}>
                                     S/. {Math.abs(diff).toFixed(2)}
                                 </div>
