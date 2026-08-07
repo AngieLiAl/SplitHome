@@ -148,31 +148,35 @@ function Balance() {
                 })}
             </div>
 
-            {/* Resumen general */}
-            <div className="row mb-4">
-                <div className="col-md-4 mb-3">
-                    <div className="kpi-card card p-3">
+            {/* Resumen general en 3 tarjetas KPI */}
+            <div className="row g-3 mb-4">
+                <div className="col-12 col-md-4">
+                    <div className="kpi-card">
                         <span className="kpi-label">Total gastado</span>
-                        <span className="kpi-value">S/. {totalGeneral.toFixed(2)}</span>
+                        <span className="kpi-value">
+                            S/. {totalGeneral.toFixed(2)}
+                        </span>
                         <span style={{ fontSize: "0.78rem", color: "var(--muted)" }}>
                             entre {personas.length} miembros
                         </span>
                     </div>
                 </div>
-                <div className="col-md-4 mb-3">
-                    <div className="kpi-card card p-3">
-                        <span className="kpi-label">Le corresponde a cada uno</span>
-                        <span className="kpi-value">S/. {promedio.toFixed(2)}</span>
+                <div className="col-12 col-md-4">
+                    <div className="kpi-card">
+                        <span className="kpi-label">Le toca a cada uno</span>
+                        <span className="kpi-value">
+                            S/. {promedio.toFixed(2)}
+                        </span>
                         <span style={{ fontSize: "0.78rem", color: "var(--muted)" }}>
                             división igualitaria
                         </span>
                     </div>
                 </div>
-                <div className="col-md-4 mb-3">
-                    <div className="kpi-card card p-3">
+                <div className="col-12 col-md-4">
+                    <div className="kpi-card oscuro">
                         <span className="kpi-label">Gastos registrados</span>
                         <span className="kpi-value">{gastos.length}</span>
-                        <span style={{ fontSize: "0.78rem", color: "var(--muted)" }}>
+                        <span style={{ fontSize: "0.78rem", color: "var(--accent)" }}>
                             en total
                         </span>
                     </div>
