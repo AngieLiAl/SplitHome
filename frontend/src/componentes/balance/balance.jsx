@@ -23,29 +23,29 @@ function Balance() {
         setGastos(rGas.data)
     }
 
-    // ── Calcular cuánto pagó cada persona ────────────────────
-    function calcularPagado(idPersona) {
+    // Suma todo lo que pagó una persona
+    function cuantoPago(idPersona) {
         return gastos
-            .filter(g => g.idPersona === idPersona)
-            .reduce((acc, g) => acc + g.monto, 0)
+            .filter(g => g.id_persona === idPersona)
+            .reduce((acc, g) => acc + Number(g.monto), 0)
     }
 
-    // ── Total general ────────────────────────────────────────
-    const totalGeneral = gastos.reduce((acc, g) => acc + g.monto, 0)
+    // Total general de todos los gastos
+    const totalGeneral = gastos.reduce((acc, g) => acc + Number(g.monto), 0)
 
-    // ── Promedio que debería pagar cada uno ──────────────────
-    const promedio = totalGeneral / personas.length
+    // Lo que le tocaría pagar a cada uno si se divide igual
+    const promedio = personas.length > 0 ? totalGeneral / personas.length : 0
 
-    // ── Iniciales para el avatar ─────────────────────────────
+    // Diferencia entre lo que pagó y lo que le toca
+    // positivo = le deben dinero
+    // negativo = debe dinero
+    function calcularDiff(idPersona) {
+        return cuantoPago(idPersona) - promedio
+    }
+
+    // Saca las iniciales del nombre para el avatar
     function iniciales(nombre) {
         return nombre.split(" ").map(p => p[0]).slice(0, 2).join("").toUpperCase()
-    }
-
-    // ── Calcular deudas ──────────────────────────────────────
-    // diff positivo = le deben dinero
-    // diff negativo = debe dinero
-    function calcularDiff(idPersona) {
-        return calcularPagado(idPersona) - promedio
     }
 
     return (
