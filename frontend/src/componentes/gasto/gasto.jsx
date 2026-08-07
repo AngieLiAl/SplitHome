@@ -26,7 +26,23 @@ function Gasto() {
     // Filtros de la tabla
     const [busqueda,       setBusqueda]       = useState("")
     const [filtroCat,      setFiltroCat]      = useState("")
-    const [filtroPersona,  setFiltroPersona]  = useState("")
+    const [filtroPersona, setFiltroPersona] = useState("")
+    
+    // Al entrar a la página traemos todos los datos del backend
+    useEffect(() => {
+        cargarTodo()
+    }, [])
+
+    async function cargarTodo() {
+        const [rGastos, rCat, rPer] = await Promise.all([
+            api.get("/gastos/"),
+            api.get("/categorias/"),
+            api.get("/personas/"),
+        ])
+        setGastos(rGastos.data)
+        setCategorias(rCat.data)
+        setPersonas(rPer.data)
+    }
 
 // ── Helpers ──────────────────────────────────────────────
 function getNombreCategoria(id) {
