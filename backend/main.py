@@ -1,63 +1,55 @@
+# ──────────────────────────────────────────────────────────────
+# PUNTO DE ENTRADA — FastAPI
+# Este archivo arranca el servidor del API y conecta
+# todas las rutas (personas, categorias, gastos).
+# También configura el CORS para que el frontend en React
+# pueda comunicarse con el backend sin problemas.
+# ──────────────────────────────────────────────────────────────
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from config.base_datos import inicializar
-from config.sistema_config import SistemaConfig
-from config.logger import Logger
-from dao.persona_dao import PersonaDAO
-from dao.categoria_dao import CategoriaDAO
-from dao.gasto_dao import GastoDAO
-from dao.participacion_dao import ParticipacionDAO
+from routes import personas, categorias, gastos
 
-from vistas.menu import (
-    mostrar_menu,
-    agregar_persona, listar_personas,
-    actualizar_persona, eliminar_persona,
-    agregar_categoria, listar_categorias,
-    actualizar_categoria, eliminar_categoria,
-    agregar_gasto, listar_gastos,
-    actualizar_gasto, eliminar_gasto,
-    gastos_por_persona, ver_total_gastado,
-    ver_participaciones_gasto, ver_gastos_persona,
-    ver_balance
+# Creamos la aplicación FastAPI con información del proyecto
+app = FastAPI(
+    title="SplitHome API",
+    version="1.0",
+    description="API REST para gestionar gastos compartidos del hogar"
 )
 
-def main():
-    inicializar()
+# ── CORS ──────────────────────────────────────────────────────
+# CORS le permite al frontend en React (que corre en otro puerto)
+# hacer peticiones al backend sin que el navegador las bloquee
+app.add_middleware(
+    CORSMiddleware,
+    # Direcciones desde donde se puede acceder al API
+    allow_origins=[
+        "http://localhost:5173",  # Vite (React en desarrollo)
+        "http://localhost:3000",  # Por si se usa otro puerto
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],    # Permite GET, POST, PUT, DELETE
+    allow_headers=["*"],    # Permite cualquier cabecera
+)
 
-    cfg    = SistemaConfig()
-    pdao   = PersonaDAO()
-    cdao   = CategoriaDAO()
-    gdao   = GastoDAO()
-    pardao = ParticipacionDAO()
-    
-    while True:
-        mostrar_menu(cfg)
-        opcion = input("  Elige una opción: ").strip()
-        
-        match opcion:
-            case "1":  agregar_persona(pdao)
-            case "2":  listar_personas(pdao)
-            case "3":  actualizar_persona(pdao)
-            case "4":  eliminar_persona(pdao)
-            case "5":  agregar_categoria(cdao)
-            case "6":  listar_categorias(cdao)
-            case "7":  actualizar_categoria(cdao)
-            case "8":  eliminar_categoria(cdao)
-            case "9":  agregar_gasto(gdao, pdao, cdao, pardao)
-            case "10": listar_gastos(gdao)
-            case "11": actualizar_gasto(gdao)
-            case "12": eliminar_gasto(gdao, pardao)
-            case "13": gastos_por_persona(gdao, pdao)
-            case "14": ver_total_gastado(gdao)
-            case "15": ver_participaciones_gasto(pardao)
-            case "16": ver_gastos_persona(pardao, pdao)
-            case "17": ver_balance(pardao, pdao)
-            case "18": Logger().mostrar_logs()
-            case "19": Logger().limpiar()
-            case "0":
-                Logger().info("Sistema cerrado por el usuario")
-                print("\n  Hasta luego.")
-                break
-            case _:
-                print("  Opción no válida, elige entre 0 y 19")
-                
-if __name__ == "__main__":
-    main()
+# ── INICIALIZAR BASE DE DATOS ─────────────────────────────────
+# Crea las tablas en PostgreSQL si todavía no existen
+# Esto se ejecuta cada vez que arranca el servidor
+inicializar()
+
+# ── REGISTRAR RUTAS ───────────────────────────────────────────
+# Conectamos cada archivo de rutas al servidor
+app.include_router(personas.router)
+app.include_router(categorias.router)
+app.include_router(gastos.router)
+
+# ── RUTA PRINCIPAL ────────────────────────────────────────────
+@app.get("/")
+def inicio():
+    # Cuando alguien entra a la raíz del API ve esta información
+    return {
+        "mensaje":  "API SplitHome — Gestor de Gastos Compartidos",
+        "version":  "1.0",
+        "autor":    "Lizarsaburu / Escobedo",
+        "docs":     "/docs",
+    }

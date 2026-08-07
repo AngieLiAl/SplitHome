@@ -1,46 +1,44 @@
-/* App.css */
+/* ============================================================
+   SplitHome — App.css
+   Solo lo que Bootstrap no puede dar por sí solo:
+   variables de color, sidebar, modal y tipografía del diseño.
+   Todo lo demás se maneja con clases de Bootstrap.
+   ============================================================ */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Outfit:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --ink:      #0f0e0d;
-  --cream:    #f5f3ee;
-  --mid:      #edeae3;
-  --dark:     #1a1917;
-  --accent:   #d4622a;
-  --accent2:  #2a8a72;
-  --muted:    #7a7771;
-  --border:   #dedad2;
-  --r:        14px;
-  --r-sm:     8px;
-  --danger:   #c0392b;
-  --danger-bg:#fdeaea;
-  --ok-bg:    #e6f5f1;
-  --shadow:   0 2px 20px rgba(0,0,0,0.08);
-  --shadow-lg:0 12px 50px rgba(0,0,0,0.15);
+  --ink:       #0f0e0d;
+  --cream:     #f5f3ee;
+  --mid:       #edeae3;
+  --dark:      #1a1917;
+  --accent:    #d4622a;
+  --accent2:   #2a8a72;
+  --muted:     #7a7771;
+  --border:    #dedad2;
+  --r:         14px;
+  --r-sm:      8px;
+  --danger:    #c0392b;
+  --danger-bg: #fdeaea;
+  --ok-bg:     #e6f5f1;
+  --shadow-lg: 0 12px 50px rgba(0,0,0,0.15);
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
+/* ── TIPOGRAFÍA ──────────────────────────────────────────────── */
 body {
   font-family: 'Outfit', sans-serif;
-  background: var(--cream);
+  background-color: var(--cream);
   color: var(--ink);
-  line-height: 1.6;
 }
 
-/* ── LAYOUT PRINCIPAL ── */
+/* ── LAYOUT ─────────────────────────────────────────────────── */
 .app-shell {
   display: flex;
   min-height: 100vh;
 }
 
-.app-main {
-  flex: 1;
-  min-width: 0;
-  background: var(--cream);
-}
+.app-main { flex: 1; min-width: 0; }
 
-/* ── SIDEBAR ── */
+/* ── SIDEBAR ─────────────────────────────────────────────────── */
 .sidebar {
   width: 240px;
   background: var(--dark);
@@ -58,7 +56,6 @@ body {
   font-size: 1.5rem;
   font-weight: 700;
   color: #fff;
-  margin-bottom: 0.5rem;
 }
 .sidebar-logo em { color: var(--accent); font-style: italic; }
 
@@ -71,7 +68,6 @@ body {
   padding: 0.4rem 0.8rem;
   font-size: 0.78rem;
   color: rgba(255,255,255,0.75);
-  margin-bottom: 1.8rem;
   width: fit-content;
 }
 .hogar-dot {
@@ -98,36 +94,39 @@ body {
   border-radius: var(--r-sm);
   font-size: 0.9rem;
   font-weight: 500;
-  text-align: left;
   width: 100%;
   text-decoration: none;
   transition: background 0.2s, color 0.2s;
   font-family: 'Outfit', sans-serif;
+  cursor: pointer;
 }
 .nav-btn:hover { background: rgba(255,255,255,0.06); color: #fff; }
-.nav-btn.activo { background: var(--accent); color: #fff; }
+.nav-btn.activo { background: var(--accent) !important; color: #fff !important; }
 
 .side-bottom {
   padding-top: 1rem;
   border-top: 1px solid rgba(255,255,255,0.08);
 }
 
-/* ── TOPBAR ── */
+/* ── TOPBAR ──────────────────────────────────────────────────── */
 .topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 2rem;
+  padding: 1rem 1.5rem;
   background: #fff;
   border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
   z-index: 20;
 }
+
 .topbar-title {
   font-family: 'Playfair Display', serif;
   font-size: 1.3rem;
+  color: var(--ink);
 }
+
 .avatar {
   width: 36px; height: 36px;
   border-radius: 50%;
@@ -137,72 +136,131 @@ body {
   font-size: 0.78rem; font-weight: 700;
 }
 
-/* ── KPI CARDS ── */
-.kpi-card {
-  border-radius: var(--r) !important;
-  border: 1px solid var(--border) !important;
+/* ── MODAL CENTRADO ──────────────────────────────────────────── */
+/* Bootstrap no tiene este estilo de modal que necesitamos */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15,14,13,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease;
 }
-.kpi-card.oscuro { background: var(--dark) !important; border-color: var(--dark) !important; }
-.kpi-label { font-size: 0.78rem; color: var(--muted); font-weight: 500; }
-.kpi-value { font-family: 'Playfair Display', serif; font-size: 1.9rem; }
 
-/* ── PANEL CARD ── */
+.modal-card {
+  background: #fff;
+  border-radius: var(--r);
+  padding: 1.8rem;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  animation: popIn 0.25s cubic-bezier(.2,.9,.3,1.1);
+}
+
+.modal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.3rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--border);
+}
+.modal-head h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.btn-cerrar {
+  background: var(--mid);
+  border: none;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.btn-cerrar:hover { background: var(--border); }
+
+/* ── BOTÓN PRINCIPAL (color del diseño) ──────────────────────── */
+/* Bootstrap no tiene el color naranja del prototipo */
+.btn-primario {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--r-sm);
+  padding: 0.65rem 1.2rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+}
+.btn-primario:hover { opacity: 0.88; }
+
+/* ── CAMPOS DE FORMULARIO (dentro del modal) ─────────────────── */
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+}
+.campo label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* ── KPI CARDS (las 3 tarjetas del panel) ────────────────────── */
+.kpi-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 1.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.kpi-card.oscuro {
+  background: var(--dark);
+  border-color: var(--dark);
+}
+.kpi-label { font-size: 0.78rem; color: var(--muted); font-weight: 500; }
+.kpi-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  color: var(--ink);
+}
+.kpi-card.oscuro .kpi-label { color: rgba(255,255,255,0.55); }
+.kpi-card.oscuro .kpi-value { color: #fff; }
+
+/* ── PANEL CARD (contenedores blancos) ───────────────────────── */
 .panel-card {
   background: #fff;
   border: 1px solid var(--border);
   border-radius: var(--r);
-  padding: 1.4rem;
+  padding: 1.3rem;
 }
 .panel-titulo {
-  font-size: 1rem;
   font-weight: 600;
+  font-size: 0.95rem;
   border-bottom: 2px solid var(--accent);
   padding-bottom: 0.5rem;
   margin-bottom: 1rem;
 }
 
-/* ── TABLA ── */
-.tabla-sh th {
-  font-size: 0.74rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--muted);
-  background: var(--cream);
-}
-
-/* ── BADGE MONTO ── */
-.badge-monto {
-  background: #2E5DA8;
-  color: #fff;
-  padding: 0.3rem 0.6rem;
-  border-radius: 99px;
-  font-size: 0.8rem;
-}
-
-/* ── FORMULARIO ── */
-.form-card {
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  padding: 1.4rem;
-}
-.form-titulo {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--accent);
-  border-bottom: 2px solid var(--accent);
-  padding-bottom: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-/* ── MEMBER CARD ── */
+/* ── MEMBER CARD ─────────────────────────────────────────────── */
 .member-card {
   background: #fff;
   border: 1px solid var(--border);
   border-radius: var(--r);
-  padding: 1.2rem;
+  padding: 1.3rem;
   text-align: center;
-  position: relative;
 }
 .member-avatar {
   width: 52px; height: 52px;
@@ -214,8 +272,17 @@ body {
   font-size: 1rem;
   margin: 0 auto 0.7rem;
 }
+.member-tag {
+  display: inline-block;
+  font-size: 0.72rem;
+  background: var(--ok-bg);
+  color: var(--accent2);
+  padding: 0.2rem 0.6rem;
+  border-radius: 99px;
+  font-weight: 600;
+}
 
-/* ── CAT CARD ── */
+/* ── CAT CARD ────────────────────────────────────────────────── */
 .cat-card {
   background: #fff;
   border: 1px solid var(--border);
@@ -225,7 +292,7 @@ body {
 }
 .cat-ico { font-size: 1.8rem; margin-bottom: 0.4rem; }
 
-/* ── BALANCE CARD ── */
+/* ── BALANCE CARD ────────────────────────────────────────────── */
 .balance-card {
   background: #fff;
   border: 1px solid var(--border);
@@ -244,32 +311,29 @@ body {
   font-weight: 700;
   flex-shrink: 0;
 }
-.text-debe { color: var(--danger); font-size: 0.8rem; }
-.text-recibe { color: var(--accent2); font-size: 0.8rem; }
 
-/* ── TOAST ── */
-.toast-sh {
-  position: fixed;
-  bottom: 1.5rem;
-  right: 1.5rem;
-  background: var(--dark);
+/* ── BADGE MONTO ─────────────────────────────────────────────── */
+.badge-monto {
+  background: #2E5DA8;
   color: #fff;
-  padding: 0.9rem 1.3rem;
-  border-radius: var(--r-sm);
-  font-size: 0.88rem;
-  font-weight: 500;
-  box-shadow: var(--shadow-lg);
-  z-index: 999;
-  animation: slideUp 0.3s ease;
-}
-.toast-sh.error { background: var(--danger); }
-@keyframes slideUp {
-  from { transform: translateY(100%); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
+  padding: 0.25rem 0.65rem;
+  border-radius: 99px;
+  font-size: 0.78rem;
+  font-weight: 600;
 }
 
-/* ── RESPONSIVE ── */
+/* ── ANIMACIONES ─────────────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.95) translateY(10px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .sidebar { display: none; }
-  .app-main { width: 100%; }
+  .topbar  { padding: 0.8rem 1rem; }
 }

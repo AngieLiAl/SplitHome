@@ -1,89 +1,97 @@
-import { FaUsers, FaTags, FaWallet, FaBalanceScale } from "react-icons/fa"
+import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
-import { useState } from "react"
+import api from "../api/axios"
 
 function Panel() {
 
-    const [totalPersonas] = useState(2)
-    const [totalCategorias] = useState(7)
-    const [totalGastos] = useState(5)
-    const [totalMonto] = useState(1624.00)
+    const [personas,   setPersonas]   = useState([])
+    const [categorias, setCategorias] = useState([])
+    const [gastos,     setGastos]     = useState([])
 
-    const gastosRecientes = [
-        { descripcion: "Alquiler Enero", monto: 1200.00, persona: "Angie", categoria: "🏠 Alquiler" },
-        { descripcion: "Recibo de Luz", monto: 85.00, persona: "Angela", categoria: "💡 Luz" },
-        { descripcion: "Recibo de Agua", monto: 60.00, persona: "Angela", categoria: "💧 Agua" },
-        { descripcion: "Internet", monto: 99.00, persona: "Angie", categoria: "📶 Internet" },
-        { descripcion: "Mercado semanal", monto: 180.00, persona: "Angela", categoria: "🍛 Comida" },
-    ]
-    
-    const porCategoria = [
-        { nombre: "🏠 Alquiler", monto: 1200, porcentaje: 100 },
-        { nombre: "🍛 Comida", monto: 180, porcentaje: 15 },
-        { nombre: "📶 Internet", monto: 99, porcentaje: 8 },
-        { nombre: "💡 Luz", monto: 85, porcentaje: 7 },
-        { nombre: "💧 Agua", monto: 60, porcentaje: 5 },
-    ]
+    useEffect(() => {
+        api.get("/personas/").then(r   => setPersonas(r.data))
+        api.get("/categorias/").then(r => setCategorias(r.data))
+        api.get("/gastos/").then(r     => setGastos(r.data))
+    }, [])
+
+    const totalGastado = gastos.reduce((acc, g) => acc + Number(g.monto), 0)
+    const gastosRecientes = gastos.slice(0, 4)
+
+    function getNombrePersona(id) {
+        const p = personas.find(p => p.id_persona === id)
+        return p ? p.nombre : "—"
+    }
+
+    function getIconoCategoria(id) {
+        const c = categorias.find(c => c.id_categoria === id)
+        return c ? c.icono : "📦"
+    }
+
+    function getMontoCategoria(id) {
+        return gastos
+            .filter(g => g.id_categoria === id)
+            .reduce((acc, g) => acc + Number(g.monto), 0)
+    }
+
+    const maxMonto = Math.max(1, ...categorias.map(c => getMontoCategoria(c.id_categoria)))
 
     return (
-        <div>
+        <div className="container-fluid py-4">
+
             {/* Saludo */}
             <div className="d-flex justify-content-between align-items-end flex-wrap gap-3 mb-4">
                 <div>
-                    <h2 className="fw-bold mb-1" style={{ fontFamily: "Playfair Display, serif" }}>
+                    <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.7rem" }}>
                         Hola, Angie 👋
                     </h2>
                     <p className="text-muted mb-0">
                         Esto es lo que está pasando en tu hogar este mes.
                     </p>
                 </div>
-                <Link to="/gasto" className="btn text-white fw-semibold"
-                    style={{ background: "var(--accent)", borderRadius: "var(--r-sm)" }}>
+                <Link to="/gasto" className="btn-primario">
                     + Nuevo gasto
                 </Link>
             </div>
 
-            {/* KPIs */}
-            <div className="row mb-4">
-
-                <div className="col-md-4 mb-3">
-                    <div className="kpi-card card p-3">
+            {/* KPIs — 3 tarjetas en fila */}
+            <div className="row g-3 mb-4">
+                <div className="col-12 col-md-4">
+                    <div className="kpi-card">
                         <span className="kpi-label">Gastado este mes</span>
-                        <span className="kpi-value">S/. {totalMonto.toFixed(2)}</span>
-                        <span style={{ fontSize: "0.78rem", color: "var(--accent2)" }}>
-                            ↑ este mes
+                        <span className="kpi-value">
+                            S/. {totalGastado.toFixed(2)}
                         </span>
-                    </div>
-                </div>
-
-                <div className="col-md-4 mb-3">
-                    <div className="kpi-card card p-3">
-                        <span className="kpi-label">Gastos registrados</span>
-                        <span className="kpi-value">{totalGastos}</span>
-                        <span style={{ fontSize: "0.78rem", color: "var(--muted)" }}>
+                        <span style={{ fontSize: "0.78rem", color: "var(--accent2)" }}>
                             este mes
                         </span>
                     </div>
                 </div>
-
-                <div className="col-md-4 mb-3">
-                    <div className="kpi-card oscuro card p-3">
-                        <span className="kpi-label">Tu balance</span>
-                        <span className="kpi-value text-white">S/. 0.00</span>
-                        <span style={{ fontSize: "0.78rem", color: "var(--accent)" }}>
-                            al día
+                <div className="col-12 col-md-4">
+                    <div className="kpi-card">
+                        <span className="kpi-label">Gastos registrados</span>
+                        <span className="kpi-value">{gastos.length}</span>
+                        <span style={{ fontSize: "0.78rem", color: "var(--muted)" }}>
+                            en total
                         </span>
                     </div>
                 </div>
-
+                <div className="col-12 col-md-4">
+                    <div className="kpi-card oscuro">
+                        <span className="kpi-label">Miembros del hogar</span>
+                        <span className="kpi-value">{personas.length}</span>
+                        <span style={{ fontSize: "0.78rem", color: "var(--accent)" }}>
+                            activos
+                        </span>
+                    </div>
+                </div>
             </div>
 
-            {/* Gastos recientes + barras categoría */}
-            <div className="row">
+            {/* Gastos recientes + barras por categoría */}
+            <div className="row g-3">
 
                 {/* Gastos recientes */}
-                <div className="col-md-8 mb-4">
-                    <div className="panel-card">
+                <div className="col-12 col-md-8">
+                    <div className="panel-card h-100">
                         <div className="d-flex justify-content-between align-items-center mb-3">
                             <h6 className="panel-titulo mb-0">Gastos recientes</h6>
                             <Link to="/gasto"
@@ -92,87 +100,95 @@ function Panel() {
                             </Link>
                         </div>
 
-                        <table className="table tabla-sh table-hover mb-0">
-                            <thead>
-                                <tr>
-                                    <th>Descripción</th>
-                                    <th>Categoría</th>
-                                    <th>Pagó</th>
-                                    <th>Monto</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {gastosRecientes.map((g, i) => (
-                                    <tr key={i}>
-                                        <td>{g.descripcion}</td>
-                                        <td>{g.categoria}</td>
-                                        <td>{g.persona}</td>
-                                        <td>
-                                            <span className="badge-monto">
-                                                S/. {g.monto.toFixed(2)}
-                                            </span>
-                                        </td>
-                                    </tr>
+                        {gastosRecientes.length === 0 ? (
+                            <div className="text-center text-muted py-4">
+                                <div style={{ fontSize: "2rem", opacity: 0.3 }}>🧾</div>
+                                <p className="mt-2 mb-0">Aún no hay gastos registrados.</p>
+                            </div>
+                        ) : (
+                            <div className="d-flex flex-column gap-2">
+                                {gastosRecientes.map((g) => (
+                                    <div key={g.id_gasto}
+                                        className="d-flex align-items-center gap-3 py-2"
+                                        style={{ borderBottom: "1px solid var(--mid)" }}>
+
+                                        {/* Ícono de categoría */}
+                                        <div style={{
+                                            width: 38, height: 38,
+                                            borderRadius: 10,
+                                            background: "var(--mid)",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            fontSize: "1rem",
+                                            flexShrink: 0
+                                        }}>
+                                            {getIconoCategoria(g.id_categoria)}
+                                        </div>
+
+                                        {/* Info */}
+                                        <div className="flex-grow-1 min-w-0">
+                                            <div style={{ fontWeight: 500, fontSize: "0.9rem" }}>
+                                                {g.descripcion}
+                                            </div>
+                                            <div className="text-muted"
+                                                style={{ fontSize: "0.78rem" }}>
+                                                {getNombrePersona(g.id_persona)} · {g.fecha}
+                                            </div>
+                                        </div>
+
+                                        {/* Monto */}
+                                        <div style={{ fontWeight: 600, fontSize: "0.92rem", whiteSpace: "nowrap" }}>
+                                            S/. {Number(g.monto).toFixed(2)}
+                                        </div>
+                                    </div>
                                 ))}
-                            </tbody>
-                        </table>
+                            </div>
+                        )}
                     </div>
                 </div>
-                
+
                 {/* Barras por categoría */}
-                <div className="col-md-4 mb-4">
+                <div className="col-12 col-md-4">
                     <div className="panel-card h-100">
                         <h6 className="panel-titulo">Por categoría</h6>
 
-                        <div className="d-flex flex-column gap-3">
-                            {porCategoria.map((c, i) => (
-                                <div key={i}>
-                                    <div className="d-flex justify-content-between mb-1"
-                                        style={{ fontSize: "0.84rem" }}>
-                                        <span>{c.nombre}</span>
-                                        <strong>S/. {c.monto.toFixed(2)}</strong>
-                                    </div>
-                                    <div style={{
-                                        height: "8px",
-                                        background: "var(--mid)",
-                                        borderRadius: "99px",
-                                        overflow: "hidden"
-                                    }}>
-                                        <div style={{
-                                            width: `${c.porcentaje}%`,
-                                            height: "100%",
-                                            background: "var(--accent)",
-                                            borderRadius: "99px",
-                                            transition: "width 0.6s ease"
-                                        }}></div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+                        {categorias.length === 0 ? (
+                            <p className="text-muted" style={{ fontSize: "0.88rem" }}>
+                                Sin datos todavía.
+                            </p>
+                        ) : (
+                            <div className="d-flex flex-column gap-3">
+                                {categorias.map((c) => {
+                                    const monto = getMontoCategoria(c.id_categoria)
+                                    const pct   = (monto / maxMonto) * 100
+                                    return (
+                                        <div key={c.id_categoria}>
+                                            <div className="d-flex justify-content-between mb-1"
+                                                style={{ fontSize: "0.82rem" }}>
+                                                <span>{c.icono} {c.nombre}</span>
+                                                <strong>S/. {monto.toFixed(2)}</strong>
+                                            </div>
+                                            {/* Barra de progreso con Bootstrap */}
+                                            <div className="progress" style={{ height: "8px", borderRadius: "99px" }}>
+                                                <div
+                                                    className="progress-bar"
+                                                    style={{
+                                                        width: `${pct}%`,
+                                                        background: "var(--accent)",
+                                                        borderRadius: "99px"
+                                                    }}>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        )}
                     </div>
                 </div>
 
             </div>
-
-            {/* Acceso rápido */}
-            <div className="panel-card mb-4">
-                <h6 className="panel-titulo">⚡ Acceso Rápido</h6>
-                <div className="d-flex flex-wrap gap-2">
-                    <Link to="/persona" className="btn btn-outline-primary btn-sm">
-                        <FaUsers className="me-1" /> Ver Miembros
-                    </Link>
-                    <Link to="/categoria" className="btn btn-outline-success btn-sm">
-                        <FaTags className="me-1" /> Ver Categorías
-                    </Link>
-                    <Link to="/gasto" className="btn btn-outline-danger btn-sm">
-                        <FaWallet className="me-1" /> Ver Gastos
-                    </Link>
-                    <Link to="/balance" className="btn btn-outline-dark btn-sm">
-                        <FaBalanceScale className="me-1" /> Ver Balance
-                    </Link>
-                </div>
-            </div>
-
         </div>
     )
 }
