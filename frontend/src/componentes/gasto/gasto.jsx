@@ -44,6 +44,33 @@ function Gasto() {
         setPersonas(rPer.data)
     }
 
+    // Abre el modal vacío para agregar un gasto nuevo
+    function abrirModalNuevo() {
+        setDescripcion(""); setMonto(""); setFecha("")
+        setIdCategoria(""); setIdPersona("")
+        setEsCompartido(false); setError("")
+        setEditandoId(null); setMostrarModal(true)
+    }
+
+    // Abre el modal con los datos del gasto para editarlo
+    function abrirModalEditar(g) {
+        setDescripcion(g.descripcion)
+        setMonto(String(g.monto))
+        setFecha(g.fecha)
+        setIdCategoria(String(g.id_categoria))
+        setIdPersona(String(g.id_persona))
+        setEsCompartido(g.es_compartido)
+        setError(""); setEditandoId(g.id_gasto); setMostrarModal(true)
+    }
+
+    // Cierra el modal y limpia todo
+    function cerrarModal() {
+        setMostrarModal(false); setEditandoId(null)
+        setDescripcion(""); setMonto(""); setFecha("")
+        setIdCategoria(""); setIdPersona("")
+        setEsCompartido(false); setError("")
+    }
+
 // ── Helpers ──────────────────────────────────────────────
 function getNombreCategoria(id) {
     const c = categorias.find(c => c.id === id)
