@@ -154,235 +154,78 @@ function Gasto() {
     
 
     return (
-        <div>
+        <div className="container-fluid py-4">
 
             {/* Encabezado */}
             <div className="d-flex justify-content-between align-items-end flex-wrap gap-3 mb-4">
                 <div>
-                    <h2 className="fw-bold mb-1"
-                        style={{ fontFamily: "Playfair Display, serif" }}>
+                    <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.7rem" }}>
                         Gastos del hogar
                     </h2>
                     <p className="text-muted mb-0">
                         Registra, edita o elimina los gastos compartidos.
                     </p>
                 </div>
-                <span className="badge rounded-pill"
-                    style={{ background: "var(--accent)", fontSize: "0.9rem", padding: "0.5rem 1rem" }}>
-                    <FaWallet className="me-1" />
-                    Total: S/. {totalMonto.toFixed(2)}
-                </span>
+                <div className="d-flex align-items-center gap-3">
+                    {/* Total acumulado */}
+                    <span style={{
+                        background: "var(--dark)",
+                        color: "#fff",
+                        padding: "0.5rem 1rem",
+                        borderRadius: "99px",
+                        fontSize: "0.88rem",
+                        fontWeight: 600
+                    }}>
+                        Total: S/. {totalGastado.toFixed(2)}
+                    </span>
+                    <button className="btn-primario" onClick={abrirModalNuevo}>
+                        + Nuevo gasto
+                    </button>
+                </div>
             </div>
 
-            <div className="row">
-                {/* Formulario */}
-                <div className="col-md-4 mb-4">
-                    <div className="form-card">
-                        <h6 className="form-titulo">
-                            {editandoId ? "✏️ Editar Gasto" : "🧾 Nuevo Gasto"}
-                        </h6>
-
-                        {error && (
-                            <div className="alert alert-danger py-2 px-3 mb-3"
-                                style={{ fontSize: "0.84rem", borderRadius: "var(--r-sm)" }}>
-                                {error}
-                            </div>
-                        )}
-
-                        <label className="form-label fw-semibold"
-                            style={{ fontSize: "0.82rem" }}>
-                            Descripción
-                        </label>
-                        <input
-                            type="text"
-                            className="form-control mb-3"
-                            placeholder="Ej: Recibo de luz"
-                            value={descripcion}
-                            onChange={e => setDescripcion(e.target.value)}
-                        />
-
-                        <label className="form-label fw-semibold"
-                            style={{ fontSize: "0.82rem" }}>
-                            Monto (S/.)
-                        </label>
-                        <input
-                            type="number"
-                            className="form-control mb-3"
-                            placeholder="0.00"
-                            min="0"
-                            step="0.01"
-                            value={monto}
-                            onChange={e => setMonto(e.target.value)}
-                        />
-
-                        <label className="form-label fw-semibold"
-                            style={{ fontSize: "0.82rem" }}>
-                            Fecha
-                        </label>
-                        <input
-                            type="date"
-                            className="form-control mb-3"
-                            value={fecha}
-                            onChange={e => setFecha(e.target.value)}
-                        />
-
-                        <label className="form-label fw-semibold"
-                            style={{ fontSize: "0.82rem" }}>
-                            Categoría
-                        </label>
-                        <select
-                            className="form-select mb-3"
-                            value={idCategoria}
-                            onChange={e => setIdCategoria(e.target.value)}>
-                            <option value="">Selecciona una categoría</option>
-                            {categorias.map(c => (
-                                <option key={c.id} value={c.id}>
-                                    {c.icono} {c.nombre}
-                                </option>
-                            ))}
-                        </select>
-
-                        <label className="form-label fw-semibold"
-                            style={{ fontSize: "0.82rem" }}>
-                            ¿Quién pagó?
-                        </label>
-                        <select
-                            className="form-select mb-3"
-                            value={idPersona}
-                            onChange={e => setIdPersona(e.target.value)}>
-                            <option value="">Selecciona un miembro</option>
-                            {personas.map(p => (
-                                <option key={p.id} value={p.id}>
-                                    {p.nombre}
-                                </option>
-                            ))}
-                        </select>
-
-                        <div className="form-check mb-3">
-                            <input
-                                type="checkbox"
-                                className="form-check-input"
-                                id="esCompartido"
-                                checked={esCompartido}
-                                onChange={e => setEsCompartido(e.target.checked)}
-                            />
-                            <label className="form-check-label"
-                                style={{ fontSize: "0.84rem" }}
-                                htmlFor="esCompartido">
-                                Dividir entre los miembros del hogar
-                            </label>
-                        </div>
-
-                        <div className="d-flex gap-2">
-                            {editandoId && (
-                                <button
-                                    className="btn btn-outline-secondary w-50 fw-semibold"
-                                    style={{ borderRadius: "var(--r-sm)" }}
-                                    onClick={limpiarFormulario}>
-                                    Cancelar
-                                </button>
-                            )}
-                            <button
-                                className="btn text-white fw-semibold"
-                                style={{
-                                    background: "var(--accent)",
-                                    borderRadius: "var(--r-sm)",
-                                    width: editandoId ? "50%" : "100%"
-                                }}
-                                onClick={guardarGasto}>
-                                {editandoId ? "Guardar cambios" : "+ Agregar gasto"}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Tabla de gastos */}
-                <div className="col-md-8 mb-4">
-
-                    {/* Buscador */}
+            {/* Filtros */}
+            <div className="row g-2 mb-3">
+                <div className="col-12 col-md-5">
                     <input
                         type="text"
-                        className="form-control mb-3"
+                        className="form-control"
+                        style={{ borderColor: "var(--border)" }}
                         placeholder="🔍 Buscar gasto..."
                         value={busqueda}
                         onChange={e => setBusqueda(e.target.value)}
                     />
-
-                    {gastosFiltrados.length === 0 ? (
-                        <div className="text-center text-muted py-5">
-                            <FaWallet size={40} style={{ opacity: 0.2 }} />
-                            <p className="mt-2">No hay gastos registrados.</p>
-                        </div>
-                    ) : (
-                        <div className="panel-card p-0" style={{ overflow: "hidden" }}>
-                            <table className="table tabla-sh table-hover mb-0">
-                                <thead>
-                                    <tr>
-                                        <th className="ps-3">Descripción</th>
-                                        <th>Categoría</th>
-                                        <th>Pagó</th>
-                                        <th>Fecha</th>
-                                        <th>Monto</th>
-                                        <th>Compartido</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {gastosFiltrados.map((g) => (
-                                        <tr key={g.id}>
-                                            <td className="ps-3">{g.descripcion}</td>
-                                            <td>{getNombreCategoria(g.idCategoria)}</td>
-                                            <td>{getNombrePersona(g.idPersona)}</td>
-                                            <td>{g.fecha}</td>
-                                            <td>
-                                                <span className="badge-monto">
-                                                    S/. {g.monto.toFixed(2)}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span className="badge rounded-pill"
-                                                    style={{
-                                                        background: g.esCompartido ? "var(--ok-bg)" : "var(--mid)",
-                                                        color: g.esCompartido ? "var(--accent2)" : "var(--muted)",
-                                                        fontSize: "0.76rem"
-                                                    }}>
-                                                    {g.esCompartido ? "Sí" : "No"}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <div className="d-flex gap-1 justify-content-end pe-2">
-                                                    <button
-                                                        className="btn btn-sm"
-                                                        style={{
-                                                            background: "var(--mid)",
-                                                            borderRadius: "var(--r-sm)",
-                                                            width: "30px", height: "30px",
-                                                            padding: 0
-                                                        }}
-                                                        onClick={() => editarGasto(g)}>
-                                                        ✏️
-                                                    </button>
-                                                    <button
-                                                        className="btn btn-sm"
-                                                        style={{
-                                                            background: "var(--danger-bg)",
-                                                            borderRadius: "var(--r-sm)",
-                                                            width: "30px", height: "30px",
-                                                            padding: 0
-                                                        }}
-                                                        onClick={() => eliminarGasto(g.id)}>
-                                                        🗑️
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    )}
+                </div>
+                <div className="col-6 col-md-3">
+                    <select
+                        className="form-select"
+                        style={{ borderColor: "var(--border)" }}
+                        value={filtroCat}
+                        onChange={e => setFiltroCat(e.target.value)}>
+                        <option value="">Todas las categorías</option>
+                        {categorias.map(c => (
+                            <option key={c.id_categoria} value={c.id_categoria}>
+                                {c.icono} {c.nombre}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                <div className="col-6 col-md-4">
+                    <select
+                        className="form-select"
+                        style={{ borderColor: "var(--border)" }}
+                        value={filtroPersona}
+                        onChange={e => setFiltroPersona(e.target.value)}>
+                        <option value="">Todos los miembros</option>
+                        {personas.map(p => (
+                            <option key={p.id_persona} value={p.id_persona}>
+                                {p.nombre}
+                            </option>
+                        ))}
+                    </select>
                 </div>
             </div>
+
         </div>
     )
 }
