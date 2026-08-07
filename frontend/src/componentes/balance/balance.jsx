@@ -49,22 +49,27 @@ function Balance() {
     }
 
     return (
-        <div>
+        <div className="container-fluid py-4">
 
             {/* Encabezado */}
             <div className="d-flex justify-content-between align-items-end flex-wrap gap-3 mb-4">
                 <div>
-                    <h2 className="fw-bold mb-1"
-                        style={{ fontFamily: "Playfair Display, serif" }}>
+                    <h2 style={{ fontFamily: "Playfair Display, serif", fontSize: "1.7rem" }}>
                         Balance entre miembros
                     </h2>
                     <p className="text-muted mb-0">
                         Así está repartida la cuenta del hogar hoy.
                     </p>
                 </div>
-                <span className="badge rounded-pill"
-                    style={{ background: "var(--accent)", fontSize: "0.9rem", padding: "0.5rem 1rem" }}>
-                    <FaBalanceScale className="me-1" />
+                {/* Total general destacado */}
+                <span style={{
+                    background: "var(--dark)",
+                    color: "#fff",
+                    padding: "0.5rem 1rem",
+                    borderRadius: "99px",
+                    fontSize: "0.88rem",
+                    fontWeight: 600
+                }}>
                     Total: S/. {totalGeneral.toFixed(2)}
                 </span>
             </div>
