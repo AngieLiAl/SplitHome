@@ -1,5 +1,8 @@
-import { useState } from "react"
-import { FaWallet } from "react-icons/fa"
+// Página para gestionar los gastos del hogar
+// Puedes agregar, editar y eliminar gastos
+// También puedes filtrar por categoría o persona
+import { useState, useEffect } from "react"
+import api from "../api/axios"
 
 function Gasto() {
 
