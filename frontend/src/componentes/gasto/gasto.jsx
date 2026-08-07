@@ -71,6 +71,63 @@ function Gasto() {
         setEsCompartido(false); setError("")
     }
 
+    // Guarda el gasto nuevo o actualiza el existente
+    async function guardarGasto() {
+        // Validaciones antes de enviar al backend
+        if (!descripcion.trim()) {
+            setError("La descripción es obligatoria"); return
+        }
+        if (!monto || Number(monto) <= 0) {
+            setError("El monto debe ser mayor a 0"); return
+        }
+        if (!fecha) {
+            setError("La fecha es obligatoria"); return
+        }
+        if (!idCategoria) {
+            setError("Selecciona una categoría"); return
+        }
+        if (!idPersona) {
+            setError("Selecciona quién pagó"); return
+        }
+
+        try {
+            if (editandoId) {
+                // Actualizamos el gasto existente
+                await api.put(`/gastos/${editandoId}`, {
+                    descripcion,
+                    monto:        Number(monto),
+                    fecha,
+                    id_categoria: Number(idCategoria),
+                })
+            } else {
+                // Creamos un gasto nuevo
+                await api.post("/gastos/", {
+                    descripcion,
+                    monto:        Number(monto),
+                    fecha,
+                    id_categoria: Number(idCategoria),
+                    id_persona:   Number(idPersona),
+                    es_compartido: esCompartido,
+                })
+            }
+            await cargarTodo()
+            cerrarModal()
+        } catch (ex) {
+            setError(ex.response?.data?.detail || "Ocurrió un error")
+        }
+    }
+
+    // Elimina un gasto del backend
+    async function eliminarGasto(id) {
+        if (!window.confirm("¿Eliminar este gasto?")) return
+        try {
+            await api.delete(`/gastos/${id}`)
+            await cargarTodo()
+        } catch (ex) {
+            alert(ex.response?.data?.detail || "No se pudo eliminar")
+        }
+    }
+
 // ── Helpers ──────────────────────────────────────────────
 function getNombreCategoria(id) {
     const c = categorias.find(c => c.id === id)
