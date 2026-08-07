@@ -1,20 +1,27 @@
-import { useState } from "react"
-import { FaBalanceScale } from "react-icons/fa"
+// Página de balance entre los miembros del hogar
+// Muestra cuánto pagó cada uno, cuánto le corresponde
+// y quién le debe a quién para equilibrar los gastos
+import { useState, useEffect } from "react"
+import api from "../api/axios"
 
 function Balance() {
 
-    const personas = [
-        { id: 1, nombre: "Angie Lizarsaburu",  email: "angie@splithome.pe"  },
-        { id: 2, nombre: "Angela Escobedo",     email: "angela@splithome.pe" },
-    ]
+    const [personas, setPersonas] = useState([])
+    const [gastos,   setGastos]   = useState([])
 
-    const gastos = [
-        { id: 1, descripcion: "Alquiler Enero",  monto: 1200.00, idPersona: 1, esCompartido: true  },
-        { id: 2, descripcion: "Recibo de Luz",   monto: 85.00,   idPersona: 2, esCompartido: true  },
-        { id: 3, descripcion: "Recibo de Agua",  monto: 60.00,   idPersona: 2, esCompartido: true  },
-        { id: 4, descripcion: "Internet",        monto: 99.00,   idPersona: 1, esCompartido: true  },
-        { id: 5, descripcion: "Mercado semanal", monto: 180.00,  idPersona: 2, esCompartido: false },
-    ]
+    // Al entrar a la página traemos los datos del backend
+    useEffect(() => {
+        cargarTodo()
+    }, [])
+
+    async function cargarTodo() {
+        const [rPer, rGas] = await Promise.all([
+            api.get("/personas/"),
+            api.get("/gastos/"),
+        ])
+        setPersonas(rPer.data)
+        setGastos(rGas.data)
+    }
 
     // ── Calcular cuánto pagó cada persona ────────────────────
     function calcularPagado(idPersona) {
