@@ -353,6 +353,132 @@ function Gasto() {
                 </div>
             )}
 
+            {/* Modal centrado */}
+            {mostrarModal && (
+                <div className="modal-overlay" onClick={cerrarModal}>
+                    <div className="modal-card" onClick={e => e.stopPropagation()}>
+
+                        <div className="modal-head">
+                            <h3>{editandoId ? "Editar gasto" : "Nuevo gasto"}</h3>
+                            <button className="btn-cerrar" onClick={cerrarModal}>✕</button>
+                        </div>
+
+                        {error && (
+                            <div className="alert alert-danger py-2 px-3 mb-3"
+                                style={{ fontSize: "0.84rem" }}>
+                                {error}
+                            </div>
+                        )}
+
+                        <div className="campo">
+                            <label>Descripción</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                placeholder="Ej: Recibo de luz"
+                                value={descripcion}
+                                onChange={e => setDescripcion(e.target.value)}
+                            />
+                        </div>
+
+                        {/* Monto y fecha en dos columnas */}
+                        <div className="row g-2">
+                            <div className="col-6">
+                                <div className="campo">
+                                    <label>Monto (S/.)</label>
+                                    <input
+                                        type="number"
+                                        className="form-control"
+                                        placeholder="0.00"
+                                        min="0"
+                                        step="0.01"
+                                        value={monto}
+                                        onChange={e => setMonto(e.target.value)}
+                                    />
+                                </div>
+                            </div>
+                            <div className="col-6">
+                                <div className="campo">
+                                    <label>Fecha</label>
+                                    <input
+                                        type="date"
+                                        className="form-control"
+                                        value={fecha}
+                                        onChange={e => setFecha(e.target.value)}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Categoría y persona en dos columnas */}
+                        <div className="row g-2">
+                            <div className="col-6">
+                                <div className="campo">
+                                    <label>Categoría</label>
+                                    <select
+                                        className="form-select"
+                                        value={idCategoria}
+                                        onChange={e => setIdCategoria(e.target.value)}>
+                                        <option value="">Selecciona</option>
+                                        {categorias.map(c => (
+                                            <option key={c.id_categoria} value={c.id_categoria}>
+                                                {c.icono} {c.nombre}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="col-6">
+                                <div className="campo">
+                                    <label>¿Quién pagó?</label>
+                                    <select
+                                        className="form-select"
+                                        value={idPersona}
+                                        onChange={e => setIdPersona(e.target.value)}
+                                        disabled={!!editandoId}>
+                                        <option value="">Selecciona</option>
+                                        {personas.map(p => (
+                                            <option key={p.id_persona} value={p.id_persona}>
+                                                {p.nombre}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Checkbox solo al crear, no al editar */}
+                        {!editandoId && (
+                            <div className="form-check mb-3">
+                                <input
+                                    type="checkbox"
+                                    className="form-check-input"
+                                    id="esCompartido"
+                                    checked={esCompartido}
+                                    onChange={e => setEsCompartido(e.target.checked)}
+                                />
+                                <label className="form-check-label"
+                                    style={{ fontSize: "0.84rem" }}
+                                    htmlFor="esCompartido">
+                                    Dividir este gasto entre los miembros del hogar
+                                </label>
+                            </div>
+                        )}
+
+                        <div className="d-flex justify-content-end gap-2 mt-3">
+                            <button className="btn btn-outline-secondary"
+                                onClick={cerrarModal}>
+                                Cancelar
+                            </button>
+                            <button className="btn-primario" onClick={guardarGasto}>
+                                {editandoId ? "Guardar cambios" : "Registrar gasto"}
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            )}
+
         </div>
     )
 }
