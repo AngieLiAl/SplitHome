@@ -226,6 +226,133 @@ function Gasto() {
                 </div>
             </div>
 
+            {/* Tabla de gastos */}
+            {gastosFiltrados.length === 0 ? (
+                <div className="text-center text-muted py-5">
+                    <div style={{ fontSize: "2.5rem", opacity: 0.3 }}>🧾</div>
+                    <p className="mt-2">No hay gastos registrados.</p>
+                    <button className="btn-primario" onClick={abrirModalNuevo}>
+                        Registrar el primero
+                    </button>
+                </div>
+            ) : (
+                <div className="table-responsive"
+                    style={{
+                        background: "#fff",
+                        border: "1px solid var(--border)",
+                        borderRadius: "var(--r)",
+                        overflow: "hidden"
+                    }}>
+                    <table className="table table-hover mb-0">
+                        <thead style={{ background: "var(--cream)" }}>
+                            <tr>
+                                <th style={{ fontSize: "0.74rem", textTransform: "uppercase",
+                                    letterSpacing: "0.04em", color: "var(--muted)",
+                                    padding: "0.9rem 1.2rem", borderBottom: "1px solid var(--border)" }}>
+                                    Descripción
+                                </th>
+                                <th style={{ fontSize: "0.74rem", textTransform: "uppercase",
+                                    letterSpacing: "0.04em", color: "var(--muted)",
+                                    padding: "0.9rem 1.2rem", borderBottom: "1px solid var(--border)" }}>
+                                    Categoría
+                                </th>
+                                <th style={{ fontSize: "0.74rem", textTransform: "uppercase",
+                                    letterSpacing: "0.04em", color: "var(--muted)",
+                                    padding: "0.9rem 1.2rem", borderBottom: "1px solid var(--border)" }}>
+                                    Pagó
+                                </th>
+                                <th style={{ fontSize: "0.74rem", textTransform: "uppercase",
+                                    letterSpacing: "0.04em", color: "var(--muted)",
+                                    padding: "0.9rem 1.2rem", borderBottom: "1px solid var(--border)" }}>
+                                    Fecha
+                                </th>
+                                <th style={{ fontSize: "0.74rem", textTransform: "uppercase",
+                                    letterSpacing: "0.04em", color: "var(--muted)",
+                                    padding: "0.9rem 1.2rem", borderBottom: "1px solid var(--border)" }}>
+                                    Monto
+                                </th>
+                                <th style={{ fontSize: "0.74rem", textTransform: "uppercase",
+                                    letterSpacing: "0.04em", color: "var(--muted)",
+                                    padding: "0.9rem 1.2rem", borderBottom: "1px solid var(--border)" }}>
+                                    Compartido
+                                </th>
+                                <th style={{ borderBottom: "1px solid var(--border)" }}></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {gastosFiltrados.map((g) => (
+                                <tr key={g.id_gasto}>
+                                    <td style={{ padding: "0.85rem 1.2rem", fontSize: "0.88rem" }}>
+                                        {g.descripcion}
+                                    </td>
+                                    <td style={{ padding: "0.85rem 1.2rem", fontSize: "0.88rem" }}>
+                                        <span style={{
+                                            background: "var(--mid)",
+                                            padding: "0.2rem 0.6rem",
+                                            borderRadius: "99px",
+                                            fontSize: "0.78rem"
+                                        }}>
+                                            {getNombreCategoria(g.id_categoria)}
+                                        </span>
+                                    </td>
+                                    <td style={{ padding: "0.85rem 1.2rem", fontSize: "0.88rem" }}>
+                                        {getNombrePersona(g.id_persona)}
+                                    </td>
+                                    <td style={{ padding: "0.85rem 1.2rem", fontSize: "0.88rem" }}>
+                                        {g.fecha}
+                                    </td>
+                                    <td style={{ padding: "0.85rem 1.2rem" }}>
+                                        <span className="badge-monto">
+                                            S/. {Number(g.monto).toFixed(2)}
+                                        </span>
+                                    </td>
+                                    <td style={{ padding: "0.85rem 1.2rem" }}>
+                                        <span style={{
+                                            background: g.es_compartido ? "var(--ok-bg)" : "var(--mid)",
+                                            color: g.es_compartido ? "var(--accent2)" : "var(--muted)",
+                                            padding: "0.2rem 0.6rem",
+                                            borderRadius: "99px",
+                                            fontSize: "0.76rem",
+                                            fontWeight: 600
+                                        }}>
+                                            {g.es_compartido ? "Sí" : "No"}
+                                        </span>
+                                    </td>
+                                    <td style={{ padding: "0.85rem 1.2rem" }}>
+                                        <div className="d-flex gap-1 justify-content-end">
+                                            <button
+                                                className="btn btn-sm"
+                                                style={{
+                                                    background: "var(--mid)",
+                                                    border: "none",
+                                                    borderRadius: "var(--r-sm)",
+                                                    width: 30, height: 30
+                                                }}
+                                                title="Editar"
+                                                onClick={() => abrirModalEditar(g)}>
+                                                ✏️
+                                            </button>
+                                            <button
+                                                className="btn btn-sm"
+                                                style={{
+                                                    background: "var(--danger-bg)",
+                                                    border: "none",
+                                                    borderRadius: "var(--r-sm)",
+                                                    width: 30, height: 30
+                                                }}
+                                                title="Eliminar"
+                                                onClick={() => eliminarGasto(g.id_gasto)}>
+                                                🗑️
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
+
         </div>
     )
 }
