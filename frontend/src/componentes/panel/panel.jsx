@@ -48,7 +48,7 @@ function Panel() {
                         Esto es lo que está pasando en tu hogar este mes.
                     </p>
                 </div>
-                <Link to="/gasto" className="btn-primario">
+                <Link to="/gasto" className="btn-primario" style={{ textDecoration: "none" }}>
                     + Nuevo gasto
                 </Link>
             </div>

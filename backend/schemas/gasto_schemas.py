@@ -5,6 +5,7 @@
 # Pydantic valida automáticamente que los datos sean correctos
 # antes de que lleguen al DAO.
 # ──────────────────────────────────────────────────────────────
+from datetime import date
 from pydantic import BaseModel, field_validator
 from typing import Optional
 
@@ -46,7 +47,7 @@ class GastoRespuesta(BaseModel):
     id_gasto:      int
     descripcion:   str
     monto:         float
-    fecha:         str
+    fecha:         date
     es_compartido: bool
     id_persona:    int
     id_categoria:  int
