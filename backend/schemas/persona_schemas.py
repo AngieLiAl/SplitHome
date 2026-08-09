@@ -6,6 +6,7 @@
 # antes de que lleguen al DAO.
 # ──────────────────────────────────────────────────────────────
 import re
+from datetime import datetime
 from pydantic import BaseModel, field_validator
 from typing import Optional
 
@@ -41,4 +42,4 @@ class PersonaRespuesta(BaseModel):
     id_persona:     int
     nombre:         str
     email:          str
-    fecha_registro: str
+    fecha_registro: datetime
