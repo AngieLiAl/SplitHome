@@ -1,55 +1,68 @@
-# ──────────────────────────────────────────────────────────────
-# PUNTO DE ENTRADA — FastAPI
-# Este archivo arranca el servidor del API y conecta
-# todas las rutas (personas, categorias, gastos).
-# También configura el CORS para que el frontend en React
-# pueda comunicarse con el backend sin problemas.
-# ──────────────────────────────────────────────────────────────
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from config.base_datos import inicializar
 from routes import personas, categorias, gastos
 
-# Creamos la aplicación FastAPI con información del proyecto
+# Descripción completa que aparece en el Swagger
+descripcion = """
+## SplitHome — API REST
+
+Sistema para gestionar los gastos compartidos del hogar.
+
+### Funcionalidades principales:
+- 👥 **Personas** — Gestión de miembros del hogar
+- 🏷️ **Categorías** — Clasificación de gastos por tipo
+- 🧾 **Gastos** — Registro y seguimiento de pagos
+- ⚖️ **Balance** — Cálculo automático de quién debe a quién
+
+### Pilares POO aplicados:
+- **Encapsulamiento** — Atributos privados con validación
+- **Herencia** — GastoCompartido hereda de Gasto
+- **Polimorfismo** — calcular_deuda() se comporta diferente según el tipo
+- **Abstracción** — Gasto define la interfaz común
+"""
+
 app = FastAPI(
     title="SplitHome API",
-    version="1.0",
-    description="API REST para gestionar gastos compartidos del hogar"
+    version="1.0.0",
+    description=descripcion,
+    contact={
+        "name": "Angie Lizarsaburu / Angela Escobedo",
+        "email": "angie@splithome.pe",
+    },
+    license_info={
+        "name": "Proyecto Académico — IESTP Argentina 2025-I",
+    },
 )
 
-# ── CORS ──────────────────────────────────────────────────────
-# CORS le permite al frontend en React (que corre en otro puerto)
-# hacer peticiones al backend sin que el navegador las bloquee
 app.add_middleware(
     CORSMiddleware,
-    # Direcciones desde donde se puede acceder al API
     allow_origins=[
-        "http://localhost:5173",  # Vite (React en desarrollo)
-        "http://localhost:3000",  # Por si se usa otro puerto
+        "http://localhost:5173",
+        "http://localhost:3000",
     ],
     allow_credentials=True,
-    allow_methods=["*"],    # Permite GET, POST, PUT, DELETE
-    allow_headers=["*"],    # Permite cualquier cabecera
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
-# ── INICIALIZAR BASE DE DATOS ─────────────────────────────────
-# Crea las tablas en PostgreSQL si todavía no existen
-# Esto se ejecuta cada vez que arranca el servidor
 inicializar()
 
-# ── REGISTRAR RUTAS ───────────────────────────────────────────
-# Conectamos cada archivo de rutas al servidor
 app.include_router(personas.router)
 app.include_router(categorias.router)
 app.include_router(gastos.router)
 
-# ── RUTA PRINCIPAL ────────────────────────────────────────────
-@app.get("/")
+@app.get("/", tags=["Inicio"])
 def inicio():
-    # Cuando alguien entra a la raíz del API ve esta información
+    """
+    Ruta principal del API.
+    Devuelve información general del sistema y links útiles.
+    """
     return {
-        "mensaje":  "API SplitHome — Gestor de Gastos Compartidos",
-        "version":  "1.0",
-        "autor":    "Lizarsaburu / Escobedo",
-        "docs":     "/docs",
+        "sistema":    "SplitHome — Gestor de Gastos Compartidos",
+        "version":    "1.0.0",
+        "autoras":    "Lizarsaburu / Escobedo",
+        "institucion":"IESTP Argentina 2025-I",
+        "docs":       "http://localhost:8000/docs",
+        "endpoints":  "http://localhost:8000/openapi.json",
     }
