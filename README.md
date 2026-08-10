@@ -93,7 +93,9 @@ DB_PASSWORD=tu_contraseña_aqui
 
 Crea un archivo `.env` dentro de la carpeta `frontend/` con este contenido:
 
+```env
 VITE_API_URL=http://localhost:8000
+```
 
 > En producción cambia la URL por la dirección real del servidor.
 
