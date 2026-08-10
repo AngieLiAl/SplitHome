@@ -27,11 +27,11 @@ app = FastAPI(
     version="1.0.0",
     description=descripcion,
     contact={
-        "name": "Angie Lizarsaburu / Angela Escobedo",
-        "email": "angie@splithome.pe",
+        "name": "Angie Lizarsaburu Alfaro / Angela Escobedo Quispe",
+        "email": "angie.lizarsaburua@istpargentina.edu.pe",
     },
     license_info={
-        "name": "Proyecto Académico — IESTP Argentina 2025-I",
+        "name": "Proyecto Académico — IESTP Argentina 2026-I",
     },
 )
 
@@ -62,7 +62,7 @@ def inicio():
         "sistema":    "SplitHome — Gestor de Gastos Compartidos",
         "version":    "1.0.0",
         "autoras":    "Lizarsaburu / Escobedo",
-        "institucion":"IESTP Argentina 2025-I",
+        "institucion":"IESTP Argentina 2026-I",
         "docs":       "http://localhost:8000/docs",
         "endpoints":  "http://localhost:8000/openapi.json",
     }
