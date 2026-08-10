@@ -1,12 +1,9 @@
-// Este archivo crea la conexión con el backend (FastAPI)
-// Todos los componentes usan este archivo para pedir
-// o enviar datos al servidor, sin tener que escribir
-// la dirección completa cada vez
+// La URL del backend se lee desde el archivo .env
+// para no tenerla hardcodeada en el código
 import axios from "axios"
 
 const api = axios.create({
-    // Dirección donde está corriendo el backend
-    baseURL: "http://localhost:8000",
+    baseURL: import.meta.env.VITE_API_URL,
 })
 
 export default api

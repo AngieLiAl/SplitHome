@@ -73,7 +73,7 @@ SplitHome/
 
 ---
 
-## ⚙️ Variables de Entorno
+## ⚙️ Variables de Entorno - Backend
 
 Crea un archivo `.env` dentro de la carpeta `backend/` con este contenido:
 
@@ -86,6 +86,16 @@ DB_PASSWORD=tu_contraseña_aqui
 ```
 
 > ⚠️ El archivo `.env` no está en el repositorio por seguridad. Se debe crear manualmente en cada PC.
+
+---
+
+## ⚙️ Variables de Entorno — Frontend
+
+Crea un archivo `.env` dentro de la carpeta `frontend/` con este contenido:
+
+VITE_API_URL=http://localhost:8000
+
+> En producción cambia la URL por la dirección real del servidor.
 
 ---
 
